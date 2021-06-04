@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace BankManagement.Application.Specifications
+namespace Identity.Application.Specifications
 {
     public abstract class Specification<T>
     {
@@ -22,7 +22,7 @@ namespace BankManagement.Application.Specifications
         {
             return new OrSpecification<T>(this, specification);
         }
-        
+
         public Specification<T> Not(Specification<T> specification)
         {
             return new NotSpecification<T>(this);

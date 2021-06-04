@@ -1,4 +1,4 @@
-﻿namespace BankManagement.Application.Keys
+﻿namespace Identity.Application.Keys
 {
     public enum FileType
     {

@@ -1,6 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using BankManagement.Application.Specifications;
+using Identity.Application.Specifications;
 using Identity.Domain.Users;
 
 namespace Identity.Application.Specifications.Users

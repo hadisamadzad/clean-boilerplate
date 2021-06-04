@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BankManagement.Application.Keys
+namespace Identity.Application.Keys
 {
     public static class FileFormat
     {
@@ -9,9 +9,9 @@ namespace BankManagement.Application.Keys
         public static IEnumerable<string> AcceptableFileFormats => new List<string>()
                 .Concat(AcceptableImageFileFormats)
                 .Concat(AcceptableDocumentFileFormats);
-        
+
         // Images
-        public static IEnumerable<string> AcceptableImageFileFormats => 
+        public static IEnumerable<string> AcceptableImageFileFormats =>
             new List<string>
             {
                 "jpg",
@@ -19,9 +19,9 @@ namespace BankManagement.Application.Keys
                 "png",
                 "gif"
             }.Select(x => x.Normalize());
-        
+
         // Documents
-        public static IEnumerable<string> AcceptableDocumentFileFormats => 
+        public static IEnumerable<string> AcceptableDocumentFileFormats =>
             new List<string>
             {
                 "txt",
