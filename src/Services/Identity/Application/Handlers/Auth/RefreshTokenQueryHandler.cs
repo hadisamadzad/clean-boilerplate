@@ -30,7 +30,7 @@ namespace Identity.Application.Handlers.Auth
                 return new OperationResult(OperationResultStatus.Unauthorized, value: UserErrors.UserNotFoundError);
 
             // Lockout check
-            if (!user.CanLogin)
+            if (!user.CanLogin())
                 return new OperationResult(OperationResultStatus.Unauthorized, value: AuthErrors.InvalidLoginError);
 
             var result = new TokenResponse

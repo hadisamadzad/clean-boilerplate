@@ -29,7 +29,7 @@ namespace Identity.Application.Handlers.Auth
                 return new OperationResult(OperationResultStatus.Unprocessable, value: UserErrors.UserNotFoundError);
 
             // Lockout check
-            if (!user.CanLogin)
+            if (!user.CanLogin())
                 return new OperationResult(OperationResultStatus.Unprocessable, value: AuthErrors.InvalidLoginError);
 
             // Login check via password
@@ -56,7 +56,7 @@ namespace Identity.Application.Handlers.Auth
             var result = new LoginResponse
             {
                 Username = user.Username,
-                Fullname = user.FullName,
+                Fullname = user.GetFullName(),
                 AccessToken = user.CreateJwtAccessToken(),
                 RefreshToken = user.CreateJwtRefreshToken()
             };

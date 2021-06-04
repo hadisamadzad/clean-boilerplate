@@ -23,6 +23,8 @@ namespace Identity.Application.Helpers
             UpdatedAt = DateTime.UtcNow
         };
 
+        public static string GetFullName(this User user) => $"{user.FirstName} {user.LastName}";
+
         public static void Activate(this User user)
         {
             user.State = UserState.Active;

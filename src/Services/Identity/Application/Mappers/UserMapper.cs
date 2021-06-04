@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Identity.Application.Helpers;
 using Identity.Application.Models.Responses.Users;
 using Identity.Domain.Users;
 
@@ -18,9 +19,9 @@ namespace Identity.Application.Mappers
                 State = user.State,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Fullname = user.FullName,
+                Fullname = user.GetFullName(),
                 NotificationCount = 0,
-                IsLockedOut = user.IsLockedOut,
+                IsLockedOut = user.IsLockedOut(),
                 LastPasswordChangeDate = user.LastPasswordChangeTime,
 
                 CreatedAt = user.CreatedAt,
