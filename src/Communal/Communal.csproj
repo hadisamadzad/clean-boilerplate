@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>Communal</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>Harponey Back-end Developers Team</Authors>
+        <Company>Harponey</Company>
+        <PackageTags>Harponey</PackageTags>
+        <Description>
+            This class library consists classes that are common among the micro-services
+        </Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Hashids.net" Version="1.3.0" />
+        <PackageReference Include="MassTransit" Version="7.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="3.1.5" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
+    </ItemGroup>
+
+</Project>

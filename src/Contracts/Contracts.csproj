@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>Contracts</PackageId>
+        <Authors>Harponey Back-end Developers Team</Authors>
+        <Company>Harponey</Company>
+        <PackageTags>Harponey</PackageTags>
+        <Description>
+            This class library is a contract for Harponey services
+        </Description>
+        <PackageVersion>0.1.0</PackageVersion>
+    </PropertyGroup>
+
+</Project>
