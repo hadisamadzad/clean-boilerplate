@@ -15,14 +15,14 @@ namespace Identity.Application.Specifications
             _left = left;
         }
 
-        public override Expression<Func<T , bool>> ToExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
             var leftExpression = _left.ToExpression();
             var rightExpression = _right.ToExpression();
 
             var orExpression = Expression.OrElse(leftExpression.Body, rightExpression.Body);
 
-            return Expression.Lambda<Func<T , bool>>(orExpression, leftExpression.Parameters.Single());
+            return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters.Single());
         }
     }
 }

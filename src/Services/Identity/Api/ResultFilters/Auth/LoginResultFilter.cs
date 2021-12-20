@@ -5,7 +5,7 @@ using Identity.Application.Models.Auth;
 
 namespace Identity.Api.Filters.Auth
 {
-    public class LoginResultFilter  : ResultFilterAttribute
+    public class LoginResultFilter : ResultFilterAttribute
     {
         public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {

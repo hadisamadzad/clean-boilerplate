@@ -1,4 +1,4 @@
-﻿﻿namespace Identity.Application.Models.Users
+﻿namespace Identity.Application.Models.Users
 {
     public enum UserSortBy
     {
