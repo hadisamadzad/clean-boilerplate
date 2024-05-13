@@ -21,8 +21,4 @@
     <ProjectReference Include="../../Contracts/Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="swagger-locker-min.js" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
 </Project>

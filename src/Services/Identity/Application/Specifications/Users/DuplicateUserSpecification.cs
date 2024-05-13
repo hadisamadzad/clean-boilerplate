@@ -1,22 +1,20 @@
-using System;
 using System.Linq.Expressions;
-using Identity.Application.Specifications;
-using Identity.Domain.Users;
+using Communal.Application.Specifications;
+using Identity.Application.Types.Entities.Users;
 
-namespace Identity.Application.Specifications.Users
+namespace Identity.Application.Specifications.Users;
+
+public class DuplicateUserSpecification : Specification<User>
 {
-    public class DuplicateUserSpecification : Specification<User>
+    private readonly string _email;
+
+    public DuplicateUserSpecification(string email)
     {
-        private readonly string _username;
+        _email = email;
+    }
 
-        public DuplicateUserSpecification(string username)
-        {
-            _username = username;
-        }
-
-        public override Expression<Func<User, bool>> ToExpression()
-        {
-            return user => user.Username.ToLower() == _username.ToLower();
-        }
+    public override Expression<Func<User, bool>> ToExpression()
+    {
+        return user => user.Email.ToLower() == _email.ToLower();
     }
 }

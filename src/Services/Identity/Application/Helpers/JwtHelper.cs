@@ -1,84 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Communal.Api.Infrastructure;
-using Identity.Application.Configurations;
-using Identity.Domain.Users;
+using Identity.Application.Types.Configs;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Identity.Application.Helpers
+namespace Identity.Application.Helpers;
+
+public static class JwtHelper
 {
-    public static class JwtHelper
+    public static SecurityTokenConfig Config;
+
+    public static string CreateJwtAccessToken(int userId, string email) =>
+        CreateJwt(Config.AccessTokenSecretKey, Config.AccessTokenLifetime, userId, email);
+
+    public static string CreateJwtRefreshToken(int userId, string email) =>
+        CreateJwt(Config.RefreshTokenSecretKey, Config.RefreshTokenLifetime, userId, email);
+
+    public static bool IsValidJwtAccessToken(string token) =>
+        ValidateJwt(token, Config.AccessTokenSecretKey);
+
+    public static bool IsValidJwtRefreshToken(string token) =>
+        ValidateJwt(token, Config.RefreshTokenSecretKey);
+
+    public static string GetEmail(string token)
     {
-        public static SecurityTokenConfig Config;
+        var payload = GetPayload(token);
+        return payload.Claims.SingleOrDefault(x => x.Type == "unique_name")?.Value;
+    }
 
-        public static string CreateJwtAccessToken(this User user) =>
-            user.CreateJwt(Config.AccessTokenSecretKey, Config.AccessTokenLifetime);
+    // Private methods
+    private static string CreateJwt(string key, TimeSpan lifetime, int userId, string email)
+    {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        public static string CreateJwtRefreshToken(this User user) =>
-            user.CreateJwt(Config.RefreshTokenSecretKey, Config.RefreshTokenLifetime);
-
-        private static string CreateJwt(this User user, string key, TimeSpan lifetime)
+        var claims = new List<Claim>
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            new(JwtRegisteredClaimNames.Sub, userId.Encode()),
+            new(JwtRegisteredClaimNames.UniqueName, email.ToLower())
+        };
 
-            var claims = new List<Claim>
+        var token = new JwtSecurityToken(
+            signingCredentials: credentials,
+            issuer: Config.Issuer,
+            audience: Config.Audience,
+            claims: claims.ToArray(),
+            expires: DateTime.UtcNow.Add(lifetime)
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private static bool ValidateJwt(string token, string securityKey)
+    {
+        if (string.IsNullOrEmpty(token))
+            return false;
+
+        try
+        {
+            _ = new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.Encode()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username.ToLower())
-            };
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey)),
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = Config.Issuer,
+                ValidAudience = Config.Audience
+            }, out SecurityToken validatedToken);
 
-            var accessToken = new JwtSecurityToken(
-                signingCredentials: credentials,
-                issuer: Config.Issuer,
-                audience: Config.Audience,
-                claims: claims.ToArray(),
-                expires: DateTime.UtcNow.Add(lifetime)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(accessToken);
+            return validatedToken != null;
         }
-
-        public static bool Validate(string token)
+        catch
         {
-            if (string.IsNullOrEmpty(token))
-                return false;
-
-            var isValid = true;
-
-            var payload = new JwtSecurityTokenHandler().ReadJwtToken(token).Payload;
-
-            // Validation rules
-            if (payload == null)
-                return false;
-
-            if (payload.Iss != Config.Issuer)
-                isValid = false;
-
-            if (!payload.Aud.Contains(Config.Audience))
-                isValid = false;
-
-            if (payload.ValidTo.Add(Config.RefreshTokenLifetime) < DateTime.UtcNow)
-                isValid = false;
-
-            return isValid;
+            return false;
         }
+    }
 
-        private static JwtPayload GetPayload(string token)
-        {
-            if (string.IsNullOrEmpty(token))
-                return null;
-            return !Validate(token) ? null : new JwtSecurityTokenHandler().ReadJwtToken(token).Payload;
-        }
+    private static JwtPayload GetPayload(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return null;
 
-        public static string GetUsername(string token)
-        {
-            var payload = GetPayload(token);
-            return payload.Claims.SingleOrDefault(x => x.Type == "unique_name")?.Value;
-        }
+        return new JwtSecurityTokenHandler().ReadJwtToken(token).Payload;
     }
 }

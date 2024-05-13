@@ -1,26 +1,24 @@
-﻿using System.Threading.Tasks;
+﻿using Identity.Application.Types.Models.Base.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Identity.Application.Models.Auth;
 
-namespace Identity.Api.Filters.Auth
+namespace Identity.Api.ResultFilters.Auth;
+
+public class LoginResultFilter : ResultFilterAttribute
 {
-    public class LoginResultFilter  : ResultFilterAttribute
+    public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
-        {
-            var result = context.Result as ObjectResult;
+        var result = context.Result as ObjectResult;
 
-            if (result?.Value is LoginResponse value)
-                result.Value = new
-                {
-                    Username = value.Username,
-                    FullName = value.Fullname,
-                    AccessToken = value.AccessToken,
-                    RefreshToken = value.RefreshToken,
-                };
+        if (result?.Value is LoginResult value)
+            result.Value = new
+            {
+                Email = value.Email,
+                FullName = value.FullName,
+                AccessToken = value.AccessToken,
+                RefreshToken = value.RefreshToken,
+            };
 
-            await next();
-        }
+        await next();
     }
 }

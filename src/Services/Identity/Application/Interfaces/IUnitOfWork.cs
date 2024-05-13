@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Identity.Application.Interfaces.Repositories;
+﻿using Identity.Application.Interfaces.Repositories;
 
-namespace Identity.Application.Interfaces
+namespace Identity.Application.Interfaces;
+
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        IUserRepository Users { get; }
+    IUserRepository Users { get; }
 
-        Task<bool> CommitAsync();
-    }
+    Task<bool> CommitAsync();
 }

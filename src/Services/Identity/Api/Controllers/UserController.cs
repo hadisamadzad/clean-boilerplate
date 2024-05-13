@@ -1,118 +1,88 @@
-using System.Threading.Tasks;
 using Communal.Api.Extensions.AspNetCore;
 using Communal.Api.Infrastructure;
-using Identity.Api.Filters.Users;
-using Identity.Api.Models.Requests.Users;
+using Identity.Api.Models.Users;
 using Identity.Api.ResultFilters.Users;
-using Identity.Application.Commands.Users;
-using Identity.Application.Models.Commands.Users;
-using Identity.Application.Models.Queries.Users;
+using Identity.Application.Operations.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Identity.Api.Controllers
+namespace Identity.Api.Controllers;
+
+[ApiController]
+public class UserController(IMediator mediator) : ControllerBase
 {
-    [ApiController]
-    public class UserController : ControllerBase
+    private readonly IMediator _mediator = mediator;
+
+    [HttpPost(Routes.Users)]
+    [CreateUserResultFilter]
+    public async Task<IActionResult> AddUser([FromBody] CreateUserRequest request)
     {
-        private readonly IMediator _mediator;
-
-        public UserController(IMediator mediator)
+        // Operation
+        var operation = await _mediator.Send(new CreateUserCommand
         {
-            _mediator = mediator;
-        }
+            Email = request.Email,
+            Password = request.Password,
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        });
 
-        // Create
-        [HttpPost(Routes.Users)]
-        [CreateUserResultFilter]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+        return this.ReturnResponse(operation);
+    }
+
+    [HttpGet(Routes.Users + "{userId}")]
+    [GetUserResultFilter]
+    public async Task<IActionResult> GetUser([FromRoute] string userId)
+    {
+        // Operation
+        var operation = await _mediator.Send(new GetUserByIdQuery
         {
-            // Operation
-            var operation = await _mediator.Send(new CreateUserCommand
-            {
-                Username = request.Username,
-                Password = request.Password,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
+            UserId = userId.Decode()
+        });
 
-                Email = request.Email
-            });
+        return this.ReturnResponse(operation);
+    }
 
-            return this.ReturnResponse(operation);
-        }
-
-        // Detail
-        [HttpGet(Routes.Users + "{ueid}")]
-        [GetUserResultFilter]
-        public async Task<IActionResult> DetailUser([FromRoute] string ueid)
+    [HttpPatch(Routes.Users + "{userId}")]
+    [UpdateUserResultFilter]
+    public async Task<IActionResult> UpdateUserInfo([FromRoute] string userId, [FromBody] UpdateUserRequest request)
+    {
+        // Operation
+        var operation = await _mediator.Send(new UpdateUserCommand
         {
-            // Decode
-            var userId = ueid.Decode();
+            UserId = userId.Decode(),
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        });
 
-            // Operation
-            var operation = await _mediator.Send(new GetUserQuery
-            {
-                UserId = userId
-            });
+        return this.ReturnResponse(operation);
+    }
 
-            return this.ReturnResponse(operation);
-        }
-
-        [HttpPatch(Routes.Users + "{ueid}")]
-        [UpdateUserResultFilter]
-        public async Task<IActionResult> UpdateUser([FromRoute] string ueid, [FromBody] UpdateUserRequest request)
+    [HttpPatch(Routes.Users + "{userId}/state")]
+    [UpdateUserResultFilter]
+    public async Task<IActionResult> UpdateUserState([FromRoute] string userId, [FromBody] UpdateUserStateRequest request)
+    {
+        // Operation
+        var operation = await _mediator.Send(new UpdateUserStateCommand
         {
-            // Decode
-            var userId = ueid.Decode();
+            UserId = userId.Decode(),
+            State = request.State
+        });
 
-            // Operation
-            var operation = await _mediator.Send(new UpdateUserCommand
-            {
-                UserId = userId,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                State = request.State,
-                Email = request.Email
-            });
+        return this.ReturnResponse(operation);
+    }
 
-            return this.ReturnResponse(operation);
-        }
-
-        [HttpPatch(Routes.Users + "{ueid}/password")]
-        [UpdateUserResultFilter]
-        public async Task<IActionResult> UpdateUserPassword([FromRoute] string ueid, [FromBody] UpdateUserPasswordRequest request)
+    [HttpPatch(Routes.Users + "{userId}/password")]
+    [UpdateUserResultFilter]
+    public async Task<IActionResult> UpdateUserPassword([FromRoute] string userId, [FromBody] UpdateUserPasswordRequest request)
+    {
+        // Operation
+        var operation = await _mediator.Send(new UpdateUserPasswordCommand
         {
-            // Decode
-            var userId = ueid.Decode();
+            UserId = userId.Decode(),
+            CurrentPassword = request.CurrentPassword,
+            NewPassword = request.NewPassword
+        });
 
-            // Operation
-            var operation = await _mediator.Send(new UpdateUserPasswordCommand
-            {
-                UserId = userId,
-                CurrentPassword = request.CurrentPassword,
-                NewPassword = request.NewPassword
-            });
-
-            return Ok();
-            return this.ReturnResponse(operation);
-        }
-
-        // Update Roles
-        [HttpPatch(Routes.Users + "{ueid}/roles")]
-        [UpdateUserRolesResultFilter]
-        public async Task<IActionResult> UpdateUserRoles([FromRoute] string ueid, [FromBody] UpdateUserRolesRequest request)
-        {
-            // Decode
-            var userId = ueid.Decode();
-
-            // Operation
-            var operation = await _mediator.Send(new UpdateUserRolesCommand
-            {
-                UserId = userId,
-                Roles = request.Roles
-            });
-
-            return this.ReturnResponse(operation);
-        }
+        return this.ReturnResponse(operation);
     }
 }

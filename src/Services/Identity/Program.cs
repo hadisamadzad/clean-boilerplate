@@ -1,38 +1,77 @@
-using System;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using System.Text.Json.Serialization;
+using Identity.App.DependencyInjection;
+using Identity.App.Middleware;
+using Identity.Application.Interfaces;
+using Identity.Database;
+using Identity.Database.Seeding;
+using Identity.Infrastructure;
 using Serilog;
 
-namespace Identity
+var env = Environment
+    .GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+
+var configs = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{env}.json", optional: false)
+    .AddEnvironmentVariables()
+    .Build();
+
+// Logger
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configs)
+    .Enrich.WithMachineName()
+    .CreateLogger();
+
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    public class Program
+    ApplicationName = "Identity",
+    EnvironmentName = env
+});
+
+builder.Configuration.AddConfiguration(configs);
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog();
+
+// Add services to the container
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(x =>
     {
-        private static readonly string ServiceName = typeof(Program).Namespace?.Split('.')[0];
-        private static readonly string Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-        private static readonly IConfiguration Configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Env}.json")
-            .AddEnvironmentVariables()
-            .Build();
+        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
-        // Main
-        public static void Main(string[] args)
-        {
-            // Logger
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.WithMachineName()
-                .CreateLogger();
+builder.Services.AddConfigurations(configs);
+builder.Services.AddCors(options => options
+    .AddPolicy("general", policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()));
+builder.Services.AddConfiguredMediatR();
+builder.Services.AddConfiguredDatabase(configs);
+//builder.Services.AddConfiguredRedisCache(configs);
 
-            CreateHostBuilder(args).Build().Run();
-        }
-        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-            .UseSerilog()
-            .ConfigureLogging(loggingConfiguration => loggingConfiguration.ClearProviders())
-            .UseConfiguration(Configuration)
-            .UseStartup<Startup>();
-    }
-}
+builder.Services.AddSingleton<ITransactionalEmailService, BrevoEmailService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddConfiguredHttpClient(configs);
+
+builder.Services.AddHealthChecks();
+builder.Services.AddConfiguredSwagger();
+
+WebApplication app = null;
+try { app = builder.Build(); }
+catch (Exception ex) { Log.Fatal(ex, "Application failed to build."); }
+
+// Add middleware
+app.UseCors("general");
+app.MapHealthChecks("/health");
+app.MapControllers();
+
+if (!app.Environment.IsProduction())
+    app.UseConfiguredSwagger();
+
+MigrationRunner.Run(app.Services);
+Seeder.Seed(app.Services);
+
+try { app.Run(); }
+catch (Exception ex) { Log.Fatal(ex, "Application failed to start."); }
