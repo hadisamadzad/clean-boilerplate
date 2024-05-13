@@ -1,8 +1,8 @@
-namespace Contracts
+namespace Contracts;
+
+public enum ServiceName
 {
-    public enum ServiceName
-    {
-        None = 0,
-        Identity
-    }
+    None = 0,
+    Gateway = 1,
+    Identity = 2
 }

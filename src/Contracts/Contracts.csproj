@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>Contracts</PackageId>
-        <Authors>Harponey Back-end Developers Team</Authors>
-        <Company>Harponey</Company>
-        <PackageTags>Harponey</PackageTags>
+        <Authors>Infercia Development Team</Authors>
+        <Company>Infercia</Company>
+        <PackageTags>Infercia</PackageTags>
         <Description>
-            This class library is a contract for Harponey services
+            This class library is a contract for Infercia services' communication
         </Description>
         <PackageVersion>0.1.0</PackageVersion>
     </PropertyGroup>

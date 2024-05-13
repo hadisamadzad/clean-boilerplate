@@ -1,34 +1,31 @@
-﻿using System;
-using HashidsNet;
+﻿using HashidsNet;
 
-namespace Communal.Api.Infrastructure
+namespace Communal.Api.Infrastructure;
+
+public static class HashId
 {
-    public static class HashId
+    private const string HashSalt =
+        "***";
+    private const int HashLength = 12;
+    private const string HashAlphabets = "abcdefghklmnoprstuvw123456789";
+
+    private static readonly Hashids Hasher = new(HashSalt, HashLength, HashAlphabets);
+
+    public static string Encode(this int id)
     {
-        private const string HashSalt =
-            "harponey-ualag812R9tG67gDfjHdfFkGh123asfjFHbKhg6J2KWe3r4#vgwsrKJa2faL25HFJ";
-        private const int HashLength = 12;
-        private const string HashAlphabets = "abcdefghklmnoprstuvw123456789";
+        return Hasher.Encode(id);
+    }
 
-        private static readonly Hashids Hasher =
-            new Hashids(HashSalt, HashLength, HashAlphabets);
-
-        public static string Encode(this int id)
+    public static int Decode(this string eid)
+    {
+        try
         {
-            return Hasher.Encode(id);
+            return Hasher.Decode(eid)[0];
         }
-
-        public static int Decode(this string eid)
+        catch
         {
-            try
-            {
-                return Hasher.Decode(eid)[0];
-            }
-            catch
-            {
-                return -1;
-                throw new ArgumentException("Invalid encoded Id value");
-            }
+            return -1;
+            throw new ArgumentException("Invalid encoded Id value");
         }
     }
 }

@@ -1,8 +1,7 @@
-namespace Communal.Application.Constants
+namespace Communal.Application.Constants;
+
+public enum Language
 {
-    public enum Language
-    {
-        English = 1,
-        Dutch = 2
-    }
+    English = 1,
+    Persian
 }

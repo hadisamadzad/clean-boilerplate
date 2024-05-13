@@ -1,44 +1,32 @@
-using System.Collections.Generic;
+namespace Communal.Application.Infrastructure.Operations;
 
-namespace Communal.Application.Infrastructure.Operations
+public class OperationResult(OperationStatus status, object value)
 {
-    public class OperationResult
+    public readonly OperationStatus Status = status;
+    public readonly object Value = value;
+
+    public bool Succeeded => IsSucceeded(Status);
+
+    private static bool IsSucceeded(OperationStatus status) => status switch
     {
-        public readonly OperationResultStatus Status;
-        public readonly bool IsPersistable;
-        public readonly object Value;
-        public readonly Dictionary<string, string> OperationValues;
+        _ when
+            status == OperationStatus.Completed ||
+            status == OperationStatus.Ignored => true,
+        _ when
+            status == OperationStatus.ValidationFailed ||
+            status == OperationStatus.NotFound ||
+            status == OperationStatus.Unauthorized ||
+            status == OperationStatus.Unprocessable => false,
+        _ => false
+    };
+}
 
-        public OperationResult(OperationResultStatus status, object value,
-            bool isPersistable = false, Dictionary<string, string> operationValues = null)
-        {
-            Status = status;
-            Value = value;
-            IsPersistable = isPersistable;
-            OperationValues = operationValues;
-        }
-
-        public OperationResult(OperationResult operation, bool succeeded)
-        {
-            Status = succeeded ? OperationResultStatus.Ok : OperationResultStatus.Unprocessable;
-            IsPersistable = operation.IsPersistable;
-            Value = operation.Value;
-            OperationValues = operation.OperationValues;
-        }
-
-        public bool Succeeded => IsSucceeded(Status);
-
-        private bool IsSucceeded(OperationResultStatus status) => status switch
-        {
-            _ when
-                status == OperationResultStatus.Ok ||
-                status == OperationResultStatus.Created => true,
-            _ when
-                status == OperationResultStatus.InvalidRequest ||
-                status == OperationResultStatus.NotFound ||
-                status == OperationResultStatus.Unauthorized ||
-                status == OperationResultStatus.Unprocessable => false,
-            _ => false
-        };
-    }
+public enum OperationStatus
+{
+    Completed = 1,
+    Ignored,
+    ValidationFailed,
+    NotFound,
+    Unauthorized,
+    Unprocessable
 }

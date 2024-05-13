@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>Communal</PackageId>
         <Version>0.1.0</Version>
-        <Authors>Harponey Back-end Developers Team</Authors>
-        <Company>Harponey</Company>
-        <PackageTags>Harponey</PackageTags>
+        <Authors>Infercia Development Team</Authors>
+        <Company>Infercia</Company>
+        <PackageTags>Infercia</PackageTags>
         <Description>
-            This class library consists classes that are common among the micro-services
+            This class library consists classes that are common among the microservices
         </Description>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Hashids.net" Version="1.3.0" />
-        <PackageReference Include="MassTransit" Version="7.1.8" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.3" />
+        <PackageReference Include="Hashids.net" Version="1.6.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="3.1.5" />
-        <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="6.0.6" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.45" />
     </ItemGroup>
 
 </Project>

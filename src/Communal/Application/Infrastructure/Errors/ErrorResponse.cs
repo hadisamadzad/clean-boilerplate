@@ -1,26 +1,16 @@
 using Communal.Application.Constants;
 
-namespace Communal.Application.Infrastructure.Errors
+namespace Communal.Application.Infrastructure.Errors;
+
+public class ErrorResponse(ErrorModel error, string language = null)
 {
-    public class ErrorResponse
+    private const string EnglishLanguage = "en";
+
+    public int Code { get; } = error.Code;
+    public string Title { get; } = error.Title;
+    public string Message { get; } = language switch
     {
-        private const string EnglishLanguage = "en";
-        private const string DutchLanguage = "nl";
-
-        public ErrorResponse(ErrorModel error, string language = null)
-        {
-            Code = error.Code;
-            Title = error.Title;
-            Message = language switch
-            {
-                EnglishLanguage => error.Messages[Language.English],
-                DutchLanguage => error.Messages[Language.Dutch],
-                _ => error.Messages[Language.English],
-            };
-        }
-
-        public int Code { get; }
-        public string Title { get; }
-        public string Message { get; }
-    }
+        EnglishLanguage => error.Messages[Language.English],
+        _ => error.Messages[Language.English],
+    };
 }

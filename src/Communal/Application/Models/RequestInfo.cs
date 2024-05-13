@@ -1,8 +1,7 @@
-﻿namespace Communal.Application.Models
+﻿namespace Communal.Application.Models;
+
+public record RequestInfo
 {
-    public class RequestInfo
-    {
-        public int UserId { get; set; }
-        public string IpAddress { get; set; }
-    }
+    public int? RequestedBy { get; set; }
+    public string IpAddress { get; set; }
 }
