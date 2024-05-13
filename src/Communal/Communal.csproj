@@ -4,9 +4,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>Communal</PackageId>
         <Version>0.1.0</Version>
-        <Authors>Infercia Development Team</Authors>
-        <Company>Infercia</Company>
-        <PackageTags>Infercia</PackageTags>
+        <Authors>Hadi Samadzad</Authors>
+        <PackageTags>Bloggy</PackageTags>
         <Description>
             This class library consists classes that are common among the microservices
         </Description>

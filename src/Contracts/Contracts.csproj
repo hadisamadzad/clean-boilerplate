@@ -3,11 +3,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>Contracts</PackageId>
-        <Authors>Infercia Development Team</Authors>
-        <Company>Infercia</Company>
-        <PackageTags>Infercia</PackageTags>
+        <Authors>Hadi Samadzad</Authors>
+        <PackageTags>Bloggy</PackageTags>
         <Description>
-            This class library is a contract for Infercia services' communication
+            This class library is a contract for Bloggy services' communication
         </Description>
         <PackageVersion>0.1.0</PackageVersion>
     </PropertyGroup>

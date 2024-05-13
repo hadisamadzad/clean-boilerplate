@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  gateway:
+    container_name: bloggy-gateway
+    image: "bloggy-gateway"
+    restart: always
+    networks:
+      - bloggy-back
+    ports:
+      - 49000:8080
+    build:
+      context: .
+      dockerfile: src/Services/Gateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=$ENV
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  identity:
+    container_name: bloggy-identity
+    image: "bloggy-identity"
+    restart: always
+    networks:
+      - bloggy-back
+    ports:
+      - 49001:8080
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=$ENV
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  bloggy-back:
+    name: bloggy-back
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.90.0.0/16
