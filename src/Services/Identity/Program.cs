@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Identity.App.DependencyInjection;
+using Identity.App.Registrations;
 using Identity.App.Middleware;
 using Identity.Application.Interfaces;
 using Identity.Database;

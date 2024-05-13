@@ -1,9 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace Identity.App.Middleware;
+namespace Identity.App.Registrations;
 
-internal static class ConfiguredExceptionHandlerMiddleware
+internal static class ExceptionHandlerRegistration
 {
     public static void UseConfiguredExceptionHandler(this IApplicationBuilder app, IWebHostEnvironment env)
     {

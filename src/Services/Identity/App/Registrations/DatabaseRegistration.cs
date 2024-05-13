@@ -1,9 +1,9 @@
 ﻿using Identity.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Identity.App.DependencyInjection;
+namespace Identity.App.Registrations;
 
-public static class DatabaseInjection
+public static class DatabaseRegistration
 {
     public static IServiceCollection AddConfiguredDatabase(this IServiceCollection services,
         IConfiguration configuration)

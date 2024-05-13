@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Identity.App.DependencyInjection;
+namespace Identity.App.Registrations;
 
-public static class SwaggerInjection
+public static class SwaggerRegistration
 {
     public static IServiceCollection AddConfiguredSwagger(this IServiceCollection services)
     {
@@ -20,5 +20,15 @@ public static class SwaggerInjection
 
 
         return services;
+    }
+
+    public static void UseConfiguredSwagger(this IApplicationBuilder app)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(configs =>
+        {
+            configs.DocumentTitle = "Identity Swagger UI";
+            configs.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity API");
+        });
     }
 }

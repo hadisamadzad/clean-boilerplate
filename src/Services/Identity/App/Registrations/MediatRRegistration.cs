@@ -1,8 +1,8 @@
 ﻿using Identity.Application.Operations.Auth;
 
-namespace Identity.App.DependencyInjection;
+namespace Identity.App.Registrations;
 
-public static class MediatRInjection
+public static class MediatRRegistration
 {
     public static IServiceCollection AddConfiguredMediatR(this IServiceCollection services)
     {

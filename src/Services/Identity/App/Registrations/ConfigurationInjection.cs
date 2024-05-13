@@ -2,7 +2,7 @@
 using Identity.Application.Helpers;
 using Identity.Application.Types.Configs;
 
-namespace Identity.App.DependencyInjection;
+namespace Identity.App.Registrations;
 
 public static class ConfigurationInjection
 {

@@ -2,9 +2,9 @@
 using Identity.Application.Types.Configs;
 using Identity.Infrastructure;
 
-namespace Identity.App.DependencyInjection;
+namespace Identity.App.Registrations;
 
-public static class HttpClientInjection
+public static class HttpClientRegistration
 {
     public static IServiceCollection AddConfiguredHttpClient(this IServiceCollection services,
         IConfiguration configuration)
