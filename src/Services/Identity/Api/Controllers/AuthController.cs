@@ -15,18 +15,19 @@ public class AuthController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
 
-    [HttpPost(Routes.Auth + "register")]
-    [RegisterResultFilter]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        var operation = await _mediator.Send(new RegisterCommand
-        (
-            Email: request.Email,
-            Password: request.Password
-        ));
-
-        return this.ReturnResponse(operation);
-    }
+    // NOTE Endpoint remove as we don't want to give public access
+    //[HttpPost(Routes.Auth + "register")]
+    //[RegisterResultFilter]
+    //public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    //{
+    //    var operation = await _mediator.Send(new RegisterCommand
+    //    (
+    //        Email: request.Email,
+    //        Password: request.Password
+    //    ));
+    //
+    //    return this.ReturnResponse(operation);
+    //}
 
     [HttpPost(Routes.Auth + "login")]
     [LoginResultFilter]

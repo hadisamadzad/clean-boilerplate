@@ -7,6 +7,11 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserValidator()
     {
+        // Id
+        RuleFor(x => x.AdminUserId)
+            .GreaterThan(0)
+            .WithState(_ => Errors.InvalidIdentifierError);
+
         // Email
         RuleFor(x => x.Email)
             .EmailAddress()

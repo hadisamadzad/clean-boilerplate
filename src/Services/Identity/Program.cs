@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Identity.App.Registrations;
-using Identity.App.Middleware;
 using Identity.Application.Interfaces;
 using Identity.Database;
 using Identity.Database.Seeding;
@@ -40,7 +39,6 @@ builder.Services
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-builder.Services.AddConfigurations(configs);
 builder.Services.AddCors(options => options
     .AddPolicy("general", policy => policy
         .AllowAnyOrigin()

@@ -9,23 +9,28 @@ using MediatR;
 
 namespace Identity.Application.Operations.Users;
 
-internal class CreateUserHandler : IRequestHandler<CreateUserCommand, OperationResult>
+internal class CreateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public CreateUserHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException("Adding user is only available by registration and invitation");
-
         // Validation
         var validation = new CreateUserValidator().Validate(request);
         if (!validation.IsValid)
             return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+
+        // Check if user is admin
+        var requestingUser = await _unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
+        if (requestingUser is null)
+            return new OperationResult(OperationStatus.Unprocessable,
+                value: UserErrors.UserNotFoundError);
+
+        // Check role
+        Role[] adminRoles = [Role.Owner, Role.Admin];
+        if (!adminRoles.Contains(requestingUser.Role))
+            return new OperationResult(OperationStatus.Unauthorized,
+                value: UserErrors.InsufficientAccessLevelError);
 
         // Checking same email
         var isExist = await _unitOfWork.Users
@@ -41,6 +46,7 @@ internal class CreateUserHandler : IRequestHandler<CreateUserCommand, OperationR
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
+            IsEmailConfirmed = true,
             State = UserState.Active,
             Role = Role.User,
             SecurityStamp = UserHelper.CreateUserStamp(),
@@ -50,6 +56,7 @@ internal class CreateUserHandler : IRequestHandler<CreateUserCommand, OperationR
         };
 
         _unitOfWork.Users.Add(entity);
+        _ = await _unitOfWork.CommitAsync();
 
         return new OperationResult(OperationStatus.Completed, value: entity);
     }

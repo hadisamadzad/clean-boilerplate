@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace Identity.App.Registrations;
+namespace Identity.Core.Registrations;
 
 internal static class ExceptionHandlerRegistration
 {

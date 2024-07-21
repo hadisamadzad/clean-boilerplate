@@ -15,11 +15,15 @@ public class UserController(IMediator mediator) : ControllerBase
 
     [HttpPost(Routes.Users)]
     [CreateUserResultFilter]
-    public async Task<IActionResult> AddUser([FromBody] CreateUserRequest request)
+    public async Task<IActionResult> AddUser(
+        [FromHeader] string requestedBy,
+        [FromBody] CreateUserRequest request)
     {
         // Operation
         var operation = await _mediator.Send(new CreateUserCommand
         {
+            AdminUserId = requestedBy.Decode(),
+
             Email = request.Email,
             Password = request.Password,
             FirstName = request.FirstName,

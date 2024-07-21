@@ -9,6 +9,7 @@ public static class RedisRegistration
         IConfiguration configuration)
     {
         var config = configuration.GetSection(RedisCacheConfig.Key).Get<RedisCacheConfig>();
+        //services.Configure<RedisCacheConfig>(configuration.GetSection(RedisCacheConfig.Key));
 
         // Distributed caching
         services.AddStackExchangeRedis("identity", config);
