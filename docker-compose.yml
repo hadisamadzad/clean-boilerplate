@@ -11,7 +11,7 @@ services:
       - 49000:8080
     build:
       context: .
-      dockerfile: src/Services/Gateway/Dockerfile
+      dockerfile: src/Gateway/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=$ENV
     extra_hosts:
@@ -27,7 +27,7 @@ services:
       - 49001:8080
     build:
       context: .
-      dockerfile: src/Services/Identity/Dockerfile
+      dockerfile: src/Identity/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=$ENV
     extra_hosts:
