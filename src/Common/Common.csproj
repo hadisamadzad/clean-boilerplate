@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PackageId>Common</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>Hadi Samadzad</Authors>
+        <PackageTags>Bloggy</PackageTags>
+        <Description>
+            This class library consists classes that are common among the microservices
+        </Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="Hashids.net" Version="1.7.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="6.0.6" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.45" />
+    </ItemGroup>
+
+</Project>
