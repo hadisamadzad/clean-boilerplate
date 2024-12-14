@@ -46,9 +46,7 @@ internal class RegisterHandler(
             UpdatedAt = DateTime.UtcNow
         };
 
-        _unitOfWork.Users.Add(user);
-
-        _ = await _unitOfWork.CommitAsync();
+        await _unitOfWork.Users.InsertAsync(user);
 
         var expiration = ExpirationTimeHelper
             .GetExpirationTime(_activationConfig.LinkLifetimeInDays);

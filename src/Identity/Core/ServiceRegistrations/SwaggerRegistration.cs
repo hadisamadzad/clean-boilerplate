@@ -13,7 +13,7 @@ public static class SwaggerRegistration
                 name: "v1",
                 info: new OpenApiInfo
                 {
-                    Title = "Identity API",
+                    Title = "Bloggy Identity API",
                     Version = "1"
                 });
         });
@@ -27,8 +27,8 @@ public static class SwaggerRegistration
         app.UseSwagger();
         app.UseSwaggerUI(configs =>
         {
-            configs.DocumentTitle = "Identity Swagger UI";
-            configs.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity API");
+            configs.DocumentTitle = "Bloggy Identity Swagger UI";
+            configs.SwaggerEndpoint("/swagger/v1/swagger.json", "Bloggy Identity API");
         });
     }
 }

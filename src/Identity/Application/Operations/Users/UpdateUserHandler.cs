@@ -6,14 +6,9 @@ using MediatR;
 
 namespace Identity.Application.Operations.Users;
 
-internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, OperationResult>
+internal class UpdateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public UpdateUserHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<OperationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
@@ -33,9 +28,7 @@ internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, OperationR
         user.LastName = request.LastName;
 
         user.UpdatedAt = DateTime.UtcNow;
-        _unitOfWork.Users.Update(user);
-
-        await _unitOfWork.CommitAsync();
+        _ = await _unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
     }

@@ -2,7 +2,7 @@
 
 namespace Identity.Application.Interfaces;
 
-public interface IUnitOfWork : IDisposable
+public interface IUnitOfWork
 {
     IUserRepository Users { get; }
 

@@ -7,14 +7,10 @@ using Common.Application.Helpers;
 
 namespace Identity.Application.Operations.Users;
 
-public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordCommand, OperationResult>
+public class UpdateUserPasswordHandler(IUnitOfWork unitOfWork) :
+    IRequestHandler<UpdateUserPasswordCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public UpdateUserPasswordHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<OperationResult> Handle(UpdateUserPasswordCommand request, CancellationToken cancellationToken)
     {
@@ -35,9 +31,7 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordComma
             return new OperationResult(OperationStatus.Unprocessable, value: AuthErrors.InvalidCredentialsError);
 
         user.UpdatedAt = DateTime.UtcNow;
-        _unitOfWork.Users.Update(user);
-
-        _ = await _unitOfWork.CommitAsync();
+        _ = await _unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
     }

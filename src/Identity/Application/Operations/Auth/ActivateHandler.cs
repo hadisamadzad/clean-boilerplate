@@ -20,10 +20,8 @@ internal class ActivateHandler(IUnitOfWork unitOfWork) :
             return new OperationResult(OperationStatus.Unprocessable,
                 value: AuthErrors.InvalidActivationTokenError);
 
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
-        if (user is null)
+        var user = await _unitOfWork.Users.GetUserByEmailAsync(email) ??
             throw new AggregateException($"Unable to read the valid activation token: {request.ActivationToken}");
-
         if (user.State != UserState.InActive)
             return new OperationResult(OperationStatus.Unprocessable,
                 value: AuthErrors.InvalidUserStateForActivationTokenError);
@@ -36,9 +34,7 @@ internal class ActivateHandler(IUnitOfWork unitOfWork) :
         user.IsEmailConfirmed = true;
         user.UpdatedAt = DateTime.UtcNow;
 
-        _unitOfWork.Users.Update(user);
-
-        _ = await _unitOfWork.CommitAsync();
+        _ = await _unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
     }

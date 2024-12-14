@@ -40,9 +40,7 @@ internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
 
         user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
 
-        _unitOfWork.Users.Update(user);
-
-        _ = await _unitOfWork.CommitAsync();
+        _ = await _unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
     }

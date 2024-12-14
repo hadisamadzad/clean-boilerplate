@@ -55,8 +55,7 @@ internal class CreateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<Creat
             UpdatedAt = DateTime.UtcNow
         };
 
-        _unitOfWork.Users.Add(entity);
-        _ = await _unitOfWork.CommitAsync();
+        await _unitOfWork.Users.InsertAsync(entity);
 
         return new OperationResult(OperationStatus.Completed, value: entity);
     }

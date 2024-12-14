@@ -1,29 +1,17 @@
 ﻿using Identity.Application.Interfaces;
 using Identity.Application.Interfaces.Repositories;
-using Identity.Database.Repositories.Users;
+using Identity.Infrastructure.Database.Repositories;
+using MongoDB.Driver;
 
-namespace Identity.Database;
+namespace Identity.Infrastructure.Database;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(IMongoDatabase mongoDatabase) : IUnitOfWork
 {
-    private readonly AppDbContext _context;
-
-    public IUserRepository Users { get; }
-
-    public UnitOfWork(AppDbContext context)
-    {
-        _context = context;
-
-        Users = new UserRepository(_context);
-    }
+    public IUserRepository Users { get; } = new UserRepository(mongoDatabase, "users");
 
     public async Task<bool> CommitAsync()
     {
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
+        var task = new Task<bool>(() => { return true; });
+        return await task;
     }
 }

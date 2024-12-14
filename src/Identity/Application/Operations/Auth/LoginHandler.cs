@@ -38,7 +38,7 @@ internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginComma
         if (!loggedIn)
         {
             user.TryToLockout();
-            _unitOfWork.Users.Update(user);
+            _ = await _unitOfWork.Users.UpdateAsync(user);
             await _unitOfWork.CommitAsync();
             return new OperationResult(OperationStatus.Unprocessable,
                 value: AuthErrors.InvalidLoginError);
@@ -51,9 +51,7 @@ internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginComma
 
         user.LastLoginDate = DateTime.UtcNow;
         user.ResetLockoutHistory();
-        _unitOfWork.Users.Update(user);
-
-        _ = await _unitOfWork.CommitAsync();
+        _ = await _unitOfWork.Users.UpdateAsync(user);
 
         var result = new LoginResult
         {

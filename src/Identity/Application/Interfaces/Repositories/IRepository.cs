@@ -5,14 +5,17 @@ namespace Identity.Application.Interfaces.Repositories;
 
 public interface IRepository<TEntity> where TEntity : class, IEntity
 {
-    Task<bool> ExistsAsync(int id);
+    // Queries
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<List<TEntity>> GetByExpressionAsync(Expression<Func<TEntity, bool>> predicate);
 
     // Commands
-    void Add(TEntity entity);
-    void Add(IEnumerable<TEntity> entities);
-    void Remove(TEntity entity);
-    void Remove(IEnumerable<TEntity> entities);
-    void Update(TEntity entity);
-    void Update(IEnumerable<TEntity> entities);
+    Task InsertAsync(TEntity entity);
+    Task InsertAsync(IEnumerable<TEntity> entities);
+
+    Task<bool> UpdateAsync(TEntity entity);
+    Task<bool> UpdateAsync(IEnumerable<TEntity> entities);
+
+    Task<bool> DeleteAsync(TEntity entity);
+    Task<bool> DeleteAsync(IEnumerable<TEntity> entities);
 }
