@@ -20,6 +20,6 @@ public class MongoDBContext
     {
         // Set up enum to string convertor (applies to all entities)
         ConventionRegistry.Register("EnumStringConvention",
-            new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, t => true);
+            new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, x => true);
     }
 }

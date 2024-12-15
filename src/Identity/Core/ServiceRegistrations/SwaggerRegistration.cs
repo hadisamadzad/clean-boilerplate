@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Identity.App.Registrations;
+namespace Identity.Core.ServiceRegistrations;
 
 public static class SwaggerRegistration
 {

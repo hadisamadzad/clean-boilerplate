@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Identity.App.Registrations;
 using Identity.Application.Interfaces;
 using Identity.Core.ServiceRegistrations;
 using Identity.Infrastructure.Database;
@@ -62,7 +61,11 @@ builder.Services.AddHealthChecks();
 builder.Services.AddConfiguredSwagger();
 
 WebApplication app = null;
-try { app = builder.Build(); }
+try
+{
+    app = builder.Build();
+    Log.Information("Application started ...");
+}
 catch (Exception ex) { Log.Fatal(ex, "Application failed to build."); }
 
 // Add middleware

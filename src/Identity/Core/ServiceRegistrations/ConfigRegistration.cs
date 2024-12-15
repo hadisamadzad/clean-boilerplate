@@ -1,9 +1,9 @@
 ﻿using Identity.Application.Helpers;
 using Identity.Application.Types.Configs;
 
-namespace Identity.Core.Registrations;
+namespace Identity.Core.ServiceRegistrations;
 
-public static class ConfigurationInjection
+public static class ConfigRegistration
 {
     public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
     {
@@ -17,7 +17,6 @@ public static class ConfigurationInjection
         services.Configure<ActivationConfig>(configuration.GetSection(ActivationConfig.Key));
         services.Configure<PasswordResetConfig>(configuration.GetSection(PasswordResetConfig.Key));
         services.Configure<BrevoConfig>(configuration.GetSection(BrevoConfig.Key));
-
 
         return services;
     }

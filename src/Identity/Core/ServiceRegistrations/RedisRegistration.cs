@@ -1,7 +1,7 @@
 ﻿using Common.Application.Configs;
 using Common.App.DependencyInjection;
 
-namespace Identity.Core.Registrations;
+namespace Identity.Core.ServiceRegistrations;
 
 public static class RedisRegistration
 {

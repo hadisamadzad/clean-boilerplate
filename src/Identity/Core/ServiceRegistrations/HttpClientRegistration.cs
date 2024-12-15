@@ -2,7 +2,7 @@
 using Identity.Application.Types.Configs;
 using Identity.Infrastructure;
 
-namespace Identity.App.Registrations;
+namespace Identity.Core.ServiceRegistrations;
 
 public static class HttpClientRegistration
 {

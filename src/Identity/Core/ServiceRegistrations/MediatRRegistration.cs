@@ -1,6 +1,6 @@
 ﻿using Identity.Application.Operations.Auth;
 
-namespace Identity.App.Registrations;
+namespace Identity.Core.ServiceRegistrations;
 
 public static class MediatRRegistration
 {
