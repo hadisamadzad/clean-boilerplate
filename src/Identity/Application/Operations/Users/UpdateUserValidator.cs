@@ -14,13 +14,13 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 
         // First name
         RuleFor(x => x.FirstName)
-            .Length(2, Types.Entities.Constants.Char80Length)
+            .Length(2, 80)
             .When(x => !string.IsNullOrEmpty(x.FirstName))
             .WithState(_ => Errors.InvalidFirstName);
 
         // Last name
         RuleFor(x => x.LastName)
-            .Length(2, Types.Entities.Constants.Char80Length)
+            .Length(2, 80)
             .When(x => !string.IsNullOrEmpty(x.LastName))
             .WithState(_ => Errors.InvalidLastName);
     }

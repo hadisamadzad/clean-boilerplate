@@ -24,12 +24,12 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
 
         // First name
         RuleFor(x => x.FirstName)
-            .MaximumLength(Types.Entities.Constants.Char80Length)
+            .MaximumLength(80)
             .WithState(_ => Errors.InvalidFirstName);
 
         // Last name
         RuleFor(x => x.LastName)
-            .MaximumLength(Types.Entities.Constants.Char80Length)
+            .MaximumLength(80)
             .WithState(_ => Errors.InvalidLastName);
 
     }
