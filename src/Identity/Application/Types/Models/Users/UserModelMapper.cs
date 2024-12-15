@@ -1,11 +1,11 @@
 using Identity.Application.Helpers;
-using Identity.Application.Types.Entities.Users;
+using Identity.Application.Types.Entities;
 
 namespace Identity.Application.Types.Models.Users;
 
 public static class UserModelMapper
 {
-    public static UserModel MapToUserModel(this User entity)
+    public static UserModel MapToUserModel(this UserEntity entity)
     {
         if (entity is null)
             return null;
@@ -30,7 +30,7 @@ public static class UserModelMapper
         };
     }
 
-    public static IEnumerable<UserModel> MapToUserModels(this IEnumerable<User> entities)
+    public static IEnumerable<UserModel> MapToUserModels(this IEnumerable<UserEntity> entities)
     {
         foreach (var entity in entities)
             yield return entity.MapToUserModel();

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Identity.Api;
 using Identity.Application.Interfaces;
 using Identity.Core.ServiceRegistrations;
 using Identity.Infrastructure.Database;
@@ -71,7 +72,10 @@ catch (Exception ex) { Log.Fatal(ex, "Application failed to build."); }
 // Add middleware
 app.UseCors("general");
 app.MapHealthChecks("/health");
-app.MapControllers();
+
+// Add endpoints
+app.MapAuthEndpoints();
+app.MapPasswordResetEndpoints();
 
 if (!app.Environment.IsProduction())
     app.UseConfiguredSwagger();

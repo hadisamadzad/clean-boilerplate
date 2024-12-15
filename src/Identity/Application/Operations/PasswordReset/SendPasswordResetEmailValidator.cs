@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Identity.Application.Constants.Errors;
 
-namespace Identity.Application.Operations.Auth;
+namespace Identity.Application.Operations.PasswordReset;
 
 public class SendPasswordResetEmailValidator : AbstractValidator<SendPasswordResetEmailCommand>
 {
@@ -9,6 +9,6 @@ public class SendPasswordResetEmailValidator : AbstractValidator<SendPasswordRes
     {
         RuleFor(x => x.Email)
             .EmailAddress()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

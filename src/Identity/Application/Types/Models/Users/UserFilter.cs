@@ -1,5 +1,5 @@
 ﻿using Common.Application.Infrastructure.Pagination;
-using Identity.Application.Types.Entities.Users;
+using Identity.Application.Types.Entities;
 
 namespace Identity.Application.Types.Models.Users;
 

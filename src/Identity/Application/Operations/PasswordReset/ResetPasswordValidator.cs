@@ -2,7 +2,7 @@
 using Identity.Application.Constants.Errors;
 using Identity.Application.Specifications.Auth;
 
-namespace Identity.Application.Operations.Auth;
+namespace Identity.Application.Operations.PasswordReset;
 
 public class ResetPasswordValidator : AbstractValidator<ResetPasswordCommand>
 {
@@ -10,10 +10,10 @@ public class ResetPasswordValidator : AbstractValidator<ResetPasswordCommand>
     {
         RuleFor(x => x.Token)
             .NotEmpty()
-            .WithState(_ => AuthErrors.InvalidPasswordResetTokenError);
+            .WithState(_ => Errors.InvalidToken);
 
         RuleFor(x => x.NewPassword)
             .Must(x => new AcceptablePasswordStrengthSpecification().IsSatisfiedBy(x))
-            .WithState(_ => Errors.NotSecurePasswordValidationError);
+            .WithState(_ => Errors.WeakPassword);
     }
 }

@@ -10,27 +10,27 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
         // Id
         RuleFor(x => x.AdminUserId)
             .GreaterThan(0)
-            .WithState(_ => Errors.InvalidIdentifierError);
+            .WithState(_ => Errors.InvalidId);
 
         // Email
         RuleFor(x => x.Email)
             .EmailAddress()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
 
         // Password
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithState(_ => Errors.InvalidPasswordValidationError);
+            .WithState(_ => Errors.InvalidPassword);
 
         // First name
         RuleFor(x => x.FirstName)
             .MaximumLength(Types.Entities.Constants.Char80Length)
-            .WithState(_ => Errors.InvalidFirstNameError);
+            .WithState(_ => Errors.InvalidFirstName);
 
         // Last name
         RuleFor(x => x.LastName)
             .MaximumLength(Types.Entities.Constants.Char80Length)
-            .WithState(_ => Errors.InvalidLastNameError);
+            .WithState(_ => Errors.InvalidLastName);
 
     }
 }

@@ -6,27 +6,19 @@ using MediatR;
 
 namespace Identity.Application.Operations.Auth;
 
-internal class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery, OperationResult>
+internal class GetUserProfileHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserProfileQuery, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public GetUserProfileHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<OperationResult> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
         // Validation
         if (request.RequestedBy == 0)
-            return new OperationResult(OperationStatus.ValidationFailed,
-                Errors.InvalidIdentifierError);
+            return new OperationResult(OperationStatus.Invalid,
+                Errors.InvalidId);
 
         // Get
-        var user = await _unitOfWork.Users.GetUserByIdAsync(request.RequestedBy);
+        var user = await unitOfWork.Users.GetUserByIdAsync(request.RequestedBy);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                UserErrors.UserNotFoundError);
+            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Mapping
         var response = user.MapToUserModel();

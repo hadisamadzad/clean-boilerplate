@@ -10,10 +10,10 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
     {
         RuleFor(x => x.Email)
             .EmailAddress()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
 
         RuleFor(x => x.Password)
             .Must(x => new AcceptablePasswordStrengthSpecification().IsSatisfiedBy(x))
-            .WithState(_ => Errors.NotSecurePasswordValidationError);
+            .WithState(_ => Errors.WeakPassword);
     }
 }

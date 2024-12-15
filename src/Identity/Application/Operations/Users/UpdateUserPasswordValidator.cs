@@ -10,10 +10,10 @@ public class UpdateUserPasswordValidator : AbstractValidator<UpdateUserPasswordC
     {
         RuleFor(x => x.CurrentPassword)
             .NotEmpty()
-            .WithState(_ => Errors.InvalidPasswordValidationError);
+            .WithState(_ => Errors.InvalidPassword);
 
         RuleFor(x => x.NewPassword)
             .Must(x => new AcceptablePasswordStrengthSpecification().IsSatisfiedBy(x))
-            .WithState(_ => Errors.WeakPasswordValidationError);
+            .WithState(_ => Errors.WeakPassword);
     }
 }

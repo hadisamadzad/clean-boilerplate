@@ -1,4 +1,4 @@
-﻿using Identity.Application.Types.Entities.Users;
+﻿using Identity.Application.Types.Entities;
 
 namespace Identity.Api.Models.Users;
 

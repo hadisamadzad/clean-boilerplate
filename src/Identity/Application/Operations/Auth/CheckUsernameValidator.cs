@@ -9,6 +9,6 @@ public class CheckUsernameValidator : AbstractValidator<CheckUsernameQuery>
     {
         RuleFor(x => x.Email)
             .EmailAddress()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

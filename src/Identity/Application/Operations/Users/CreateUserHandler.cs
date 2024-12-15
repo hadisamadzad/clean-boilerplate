@@ -3,7 +3,8 @@ using Common.Application.Infrastructure.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
-using Identity.Application.Specifications.Users;
+using Identity.Application.Specifications;
+using Identity.Application.Types.Entities;
 using Identity.Application.Types.Entities.Users;
 using MediatR;
 
@@ -11,36 +12,34 @@ namespace Identity.Application.Operations.Users;
 
 internal class CreateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         // Validation
         var validation = new CreateUserValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check if user is admin
-        var requestingUser = await _unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
+        var requestingUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
         if (requestingUser is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.UserNotFoundError);
+                value: Errors.InvalidId);
 
         // Check role
         Role[] adminRoles = [Role.Owner, Role.Admin];
         if (!adminRoles.Contains(requestingUser.Role))
             return new OperationResult(OperationStatus.Unauthorized,
-                value: UserErrors.InsufficientAccessLevelError);
+                value: Errors.InsufficientAccessLevel);
 
         // Checking same email
-        var isExist = await _unitOfWork.Users
-            .ExistsAsync(new DuplicateUserSpecification(request.Email).ToExpression());
+        var isExist = await unitOfWork.Users
+            .ExistsAsync(UserSpecification.DuplicateUser(request.Email));
         if (isExist)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.DuplicateUsernameError);
+                value: Errors.DuplicateUsername);
 
         // Factory
-        var entity = new User
+        var entity = new UserEntity
         {
             PasswordHash = PasswordHelper.Hash(request.Password),
             FirstName = request.FirstName,
@@ -55,7 +54,7 @@ internal class CreateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<Creat
             UpdatedAt = DateTime.UtcNow
         };
 
-        await _unitOfWork.Users.InsertAsync(entity);
+        await unitOfWork.Users.InsertAsync(entity);
 
         return new OperationResult(OperationStatus.Completed, value: entity);
     }

@@ -1,9 +1,10 @@
-﻿using Identity.Application.Types.Entities.Users;
+﻿using Identity.Application.Types.Entities;
 
 namespace Identity.Application.Interfaces.Repositories;
 
-public interface IUserRepository : IRepository<User>
+public interface IUserRepository : IRepository<UserEntity>
 {
-    Task<User> GetUserByIdAsync(int id);
-    Task<User> GetUserByEmailAsync(string email);
+    Task<bool> AnyUsersAsync();
+    Task<UserEntity> GetUserByIdAsync(int id);
+    Task<UserEntity> GetUserByEmailAsync(string email);
 }

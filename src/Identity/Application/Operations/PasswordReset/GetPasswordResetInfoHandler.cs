@@ -4,32 +4,29 @@ using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using MediatR;
 
-namespace Identity.Application.Operations.Auth;
+namespace Identity.Application.Operations.PasswordReset;
 
 internal class GetPasswordResetInfoHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<GetPasswordResetInfoQuery, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<OperationResult> Handle(GetPasswordResetInfoQuery request, CancellationToken cancellationToken)
     {
         var (succeeded, email) = PasswordResetTokenHelper.ReadPasswordResetToken(request.Token);
 
         if (!succeeded)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.InvalidPasswordResetTokenError);
+                value: Errors.InvalidToken);
 
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
-        if (user is null)
+        var user = await unitOfWork.Users.GetUserByEmailAsync(email) ??
             throw new AggregateException($"Unable to read the valid password-reset token: {request.Token}");
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.LockoutUserLoginError);
+                value: Errors.LockedUser);
 
         if (!string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.InconsistentTokenError);
+                value: Errors.InvalidToken);
 
         return new OperationResult(OperationStatus.Completed, value: user.Email);
     }

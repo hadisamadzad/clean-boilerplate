@@ -10,28 +10,26 @@ namespace Identity.Application.Operations.Users;
 public class UpdateUserPasswordHandler(IUnitOfWork unitOfWork) :
     IRequestHandler<UpdateUserPasswordCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<OperationResult> Handle(UpdateUserPasswordCommand request, CancellationToken cancellationToken)
     {
         // Validation
         var validation = new UpdateUserPasswordValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await _unitOfWork.Users.GetUserByIdAsync(request.UserId);
+        var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.UserNotFoundError);
+                value: Errors.InvalidId);
 
         if (PasswordHelper.CheckPasswordHash(user.PasswordHash, request.CurrentPassword))
             user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
         else
-            return new OperationResult(OperationStatus.Unprocessable, value: AuthErrors.InvalidCredentialsError);
+            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidCredentials);
 
         user.UpdatedAt = DateTime.UtcNow;
-        _ = await _unitOfWork.Users.UpdateAsync(user);
+        _ = await unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
     }

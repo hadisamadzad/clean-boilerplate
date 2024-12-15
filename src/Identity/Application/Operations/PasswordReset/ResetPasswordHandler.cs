@@ -3,11 +3,12 @@ using Common.Application.Infrastructure.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
+using Identity.Application.Operations.Auth;
 using Identity.Application.Types.Configs;
 using MediatR;
 using Microsoft.Extensions.Options;
 
-namespace Identity.Application.Operations.Auth;
+namespace Identity.Application.Operations.PasswordReset;
 
 internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
     IOptions<PasswordResetConfig> passwordResetConfig)
@@ -21,22 +22,22 @@ internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
         // Validation
         var validation = new ResetPasswordValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var (succeeded, email) = PasswordResetTokenHelper.ReadPasswordResetToken(request.Token);
         if (!succeeded)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.InvalidPasswordResetTokenError);
+                value: Errors.InvalidToken);
 
         var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.UserNotFoundError);
+                value: Errors.InvalidId);
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.LockoutUserLoginError);
+                value: Errors.LockedUser);
 
         user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
 

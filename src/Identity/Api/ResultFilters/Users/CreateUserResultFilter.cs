@@ -1,5 +1,5 @@
 using Common.Api.Infrastructure;
-using Identity.Application.Types.Entities.Users;
+using Identity.Application.Types.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -11,7 +11,7 @@ public class CreateUserResultFilter : ResultFilterAttribute
     {
         var result = context.Result as ObjectResult;
 
-        if (result?.Value is User value)
+        if (result?.Value is UserEntity value)
             result.Value = new
             {
                 Id = value.Id.Encode(),

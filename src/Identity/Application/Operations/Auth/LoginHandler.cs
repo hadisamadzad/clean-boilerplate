@@ -3,7 +3,6 @@ using Common.Application.Infrastructure.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
-using Identity.Application.Types.Entities.Users;
 using Identity.Application.Types.Models.Base.Auth;
 using MediatR;
 
@@ -11,25 +10,21 @@ namespace Identity.Application.Operations.Auth;
 
 internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<OperationResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // Validation
         var validation = new LoginValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
+        var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.UserNotFoundError);
+            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Lockout check
         if (user.IsLockedOutOrNotActive())
-            return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.NotActivatedUserLoginError);
+            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidCredentials);
 
         // Login check via password
         var loggedIn = PasswordHelper.CheckPasswordHash(user.PasswordHash, request.Password);
@@ -38,20 +33,15 @@ internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginComma
         if (!loggedIn)
         {
             user.TryToLockout();
-            _ = await _unitOfWork.Users.UpdateAsync(user);
-            await _unitOfWork.CommitAsync();
-            return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.InvalidLoginError);
+            _ = await unitOfWork.Users.UpdateAsync(user);
+            await unitOfWork.CommitAsync();
+            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidCredentials);
         }
 
         /* Here user is authenticated */
-        // Other updates
-        if (user.State == UserState.InActive)
-            user.Activate();
-
         user.LastLoginDate = DateTime.UtcNow;
         user.ResetLockoutHistory();
-        _ = await _unitOfWork.Users.UpdateAsync(user);
+        _ = await unitOfWork.Users.UpdateAsync(user);
 
         var result = new LoginResult
         {

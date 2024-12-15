@@ -1,11 +1,11 @@
-using Identity.Application.Types.Entities.Users;
+using Identity.Application.Types.Entities;
 using Identity.Application.Types.Models.Users;
 
 namespace Identity.Database.Extensions;
 
 public static class UserQueryableExtension
 {
-    public static IQueryable<User> ApplyFilter(this IQueryable<User> query, UserFilter filter)
+    public static IQueryable<UserEntity> ApplyFilter(this IQueryable<UserEntity> query, UserFilter filter)
     {
         // Filter by keyword
         if (!string.IsNullOrEmpty(filter.Keyword))
@@ -26,7 +26,7 @@ public static class UserQueryableExtension
         return query;
     }
 
-    public static IQueryable<User> ApplySort(this IQueryable<User> query, UserSortBy? sortBy)
+    public static IQueryable<UserEntity> ApplySort(this IQueryable<UserEntity> query, UserSortBy? sortBy)
     {
         return sortBy switch
         {

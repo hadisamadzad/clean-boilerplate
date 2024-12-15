@@ -10,10 +10,10 @@ public class LoginValidator : AbstractValidator<LoginCommand>
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithState(_ => Errors.InvalidPasswordValidationError);
+            .WithState(_ => Errors.InvalidPassword);
     }
 }

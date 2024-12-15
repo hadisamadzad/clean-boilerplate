@@ -3,74 +3,49 @@ using Common.Application.Infrastructure.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
-using Identity.Application.Types.Configs;
+using Identity.Application.Types.Entities;
 using Identity.Application.Types.Entities.Users;
 using Identity.Application.Types.Models.Base.Auth;
 using MediatR;
-using Microsoft.Extensions.Options;
 
 namespace Identity.Application.Operations.Auth;
 
-internal class RegisterHandler(
-    IUnitOfWork unitOfWork,
-    ITransactionalEmailService transactionalEmailService,
-    IOptions<ActivationConfig> activationConfig)
+internal class RegisterHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<RegisterCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ITransactionalEmailService _transactionalEmailService = transactionalEmailService;
-    private readonly ActivationConfig _activationConfig = activationConfig.Value;
-
     public async Task<OperationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         // Validation
         var validation = new RegisterValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
-        // Get
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
-        if (user is not null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.DuplicateUsernameError);
+        // Check initial registration
+        // NOTE Registration is supposed to be done only once and for the first user. So if
+        // there is any existing user, it means there is nothing to do with registration.
+        var isAlreadyInitialised = await unitOfWork.Users.AnyUsersAsync();
+        if (isAlreadyInitialised)
+            return new OperationResult(OperationStatus.Unprocessable, Errors.RegistrationAlreadyDone);
 
-        user = new User
+        var user = new UserEntity
         {
             Email = request.Email.ToLower(),
             PasswordHash = PasswordHelper.Hash(request.Password),
-            State = UserState.InActive,
-            Role = Role.User,
+            State = UserState.Active,
+            Role = Role.Owner, // The first user will be the owner
             SecurityStamp = UserHelper.CreateUserStamp(),
             ConcurrencyStamp = UserHelper.CreateUserStamp(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
 
-        await _unitOfWork.Users.InsertAsync(user);
-
-        var expiration = ExpirationTimeHelper
-            .GetExpirationTime(_activationConfig.LinkLifetimeInDays);
-
-        var activationToken = ActivationTokenHelper
-            .GenerateActivationToken(user.Email, expiration);
+        await unitOfWork.Users.InsertAsync(user);
 
         var result = new RegisterResult
         {
             UserId = user.Id,
-            Email = user.Email,
-            ActivationToken = activationToken,
+            Email = user.Email
         };
-
-        var email = user.Email;
-        var activationLink = string.Format(_activationConfig.LinkFormat, activationToken);
-
-        var @params = new Dictionary<string, string>
-            {
-                { "Link", activationLink }
-            };
-
-        _ = await _transactionalEmailService.SendEmailByTemplateIdAsync(
-            _activationConfig.BrevoTemplateId, [email], @params);
 
         return new OperationResult(OperationStatus.Completed, value: result);
     }

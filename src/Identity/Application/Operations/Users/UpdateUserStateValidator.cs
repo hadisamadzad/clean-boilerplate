@@ -10,11 +10,11 @@ public class UpdateUserStateValidator : AbstractValidator<UpdateUserStateCommand
         // User id
         RuleFor(x => x.UserId)
             .GreaterThan(0)
-            .WithState(_ => Errors.InvalidInputValidationError);
+            .WithState(_ => Errors.InvalidId);
 
         // Email
         RuleFor(x => x.State)
             .IsInEnum()
-            .WithState(_ => Errors.InvalidEmailError);
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

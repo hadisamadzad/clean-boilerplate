@@ -1,6 +1,8 @@
-﻿namespace Identity.Application.Types.Entities.Users;
+﻿using Identity.Application.Types.Entities.Users;
 
-public class User : IEntity
+namespace Identity.Application.Types.Entities;
+
+public class UserEntity : IEntity
 {
     #region Identity
 

@@ -3,11 +3,12 @@ using Common.Application.Infrastructure.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
+using Identity.Application.Operations.Auth;
 using Identity.Application.Types.Configs;
 using MediatR;
 using Microsoft.Extensions.Options;
 
-namespace Identity.Application.Operations.Auth;
+namespace Identity.Application.Operations.PasswordReset;
 
 internal class SendPasswordResetEmailHandler(
     IUnitOfWork unitOfWork,
@@ -15,8 +16,6 @@ internal class SendPasswordResetEmailHandler(
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<SendPasswordResetEmailCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ITransactionalEmailService _transactionalEmailService = transactionalEmailService;
     private readonly PasswordResetConfig _passwordResetConfig = passwordResetConfig.Value;
 
     public async Task<OperationResult> Handle(SendPasswordResetEmailCommand request, CancellationToken cancellationToken)
@@ -24,17 +23,17 @@ internal class SendPasswordResetEmailHandler(
         // Validation
         var validation = new SendPasswordResetEmailValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.ValidationFailed, validation.GetFirstError());
+            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
+        var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: UserErrors.UserNotFoundError);
+                value: Errors.InvalidId);
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: AuthErrors.LockoutUserLoginError);
+                value: Errors.LockedUser);
 
         var expirationTime = ExpirationTimeHelper
             .GetExpirationTime(_passwordResetConfig.LinkLifetimeInDays);
@@ -50,7 +49,7 @@ internal class SendPasswordResetEmailHandler(
                 { "Link", passwordResetLink }
             };
 
-        _ = await _transactionalEmailService.SendEmailByTemplateIdAsync(
+        _ = await transactionalEmailService.SendEmailByTemplateIdAsync(
             _passwordResetConfig.BrevoTemplateId, [email], @params);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
