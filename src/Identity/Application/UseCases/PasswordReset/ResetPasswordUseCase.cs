@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
@@ -30,22 +30,22 @@ internal class ResetPasswordHandler(IRepositoryManager unitOfWork,
         var (succeeded, email) = PasswordResetTokenHelper.ReadPasswordResetToken(request.Token);
         if (!succeeded)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidToken);
+                Value: Errors.InvalidToken);
 
         var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidId);
+                Value: Errors.InvalidId);
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.LockedUser);
+                Value: Errors.LockedUser);
 
         user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
 
         _ = await _unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Id);
+        return new OperationResult(OperationStatus.Completed, Value: user.Id);
     }
 }
 

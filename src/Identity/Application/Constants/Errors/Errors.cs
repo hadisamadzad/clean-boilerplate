@@ -1,4 +1,4 @@
-using Common.Application.Infrastructure.Errors;
+using Common.Utilities;
 
 namespace Identity.Application.Constants.Errors;
 

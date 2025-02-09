@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
@@ -23,19 +23,19 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         // Check if user is admin
         var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
         if (requesterUser is null)
-            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidId);
+            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
 
         // Check role
         if (!requesterUser.HasAdminRole())
             return new OperationResult(OperationStatus.Unauthorized,
-                value: Errors.InsufficientAccessLevel);
+                Value: Errors.InsufficientAccessLevel);
 
         // Checking duplicate email
         var isDuplicate = await unitOfWork.Users
             .ExistsAsync(x => x.Email.ToLower() == request.Email.ToLower());
         if (isDuplicate)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.DuplicateUsername);
+                Value: Errors.DuplicateUsername);
 
         // Factory
         var entity = new UserEntity
@@ -56,7 +56,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
 
         await unitOfWork.Users.InsertAsync(entity);
 
-        return new OperationResult(OperationStatus.Completed, value: entity);
+        return new OperationResult(OperationStatus.Completed, Value: entity);
     }
 }
 

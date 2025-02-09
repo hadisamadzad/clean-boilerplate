@@ -1,9 +1,8 @@
-using Common.Application.Interfaces;
-using Common.Persistence.Redis;
+using Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace Common.Persistence.DistributedCache.Redis;
+namespace Common.Persistence.Redis;
 
 public static class RedisCacheServiceExtensions
 {

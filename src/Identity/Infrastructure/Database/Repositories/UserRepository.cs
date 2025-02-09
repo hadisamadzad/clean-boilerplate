@@ -1,4 +1,5 @@
-﻿using Identity.Application.Interfaces.Repositories;
+﻿using Common.Persistence.MongoDB;
+using Identity.Application.Interfaces.Repositories;
 using Identity.Application.Types.Entities;
 using MongoDB.Driver;
 

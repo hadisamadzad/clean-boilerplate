@@ -1,9 +1,9 @@
-namespace Common.Application.Infrastructure.Operations;
+namespace Common.Utilities.Operations;
 
-public record OperationResult(OperationStatus status, object value)
+public record OperationResult(OperationStatus Status, object Value)
 {
-    public readonly OperationStatus Status = status;
-    public readonly object Value = value;
+    public readonly OperationStatus Status = Status;
+    public readonly object Value = Value;
 
     public bool Succeeded => IsSucceeded(Status);
 

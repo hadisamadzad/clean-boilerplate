@@ -1,4 +1,4 @@
-﻿using Common.Application.Infrastructure.Operations;
+﻿using Common.Utilities.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Users;
@@ -23,7 +23,7 @@ internal class GetUserProfileHandler(IRepositoryManager unitOfWork) : IRequestHa
         // Mapping
         var response = user.MapToUserModel();
 
-        return new OperationResult(OperationStatus.Completed, value: response);
+        return new OperationResult(OperationStatus.Completed, Value: response);
     }
 }
 

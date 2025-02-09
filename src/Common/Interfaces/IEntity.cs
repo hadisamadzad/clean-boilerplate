@@ -1,4 +1,4 @@
-namespace Identity.Application.Types.Entities;
+namespace Common.Interfaces;
 
 public interface IEntity
 {

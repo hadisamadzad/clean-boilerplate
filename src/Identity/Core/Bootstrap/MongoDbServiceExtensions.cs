@@ -1,5 +1,4 @@
 ﻿using Common.Persistence.MongoDB;
-using Identity.Infrastructure.Database;
 
 namespace Identity.Core.Bootstrap;
 

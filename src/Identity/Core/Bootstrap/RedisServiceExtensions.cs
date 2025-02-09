@@ -1,5 +1,4 @@
-﻿using Common.Persistence.DistributedCache.Redis;
-using Common.Persistence.Redis;
+﻿using Common.Persistence.Redis;
 
 namespace Identity.Core.Bootstrap;
 

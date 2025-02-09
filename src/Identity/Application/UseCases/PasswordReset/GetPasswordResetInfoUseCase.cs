@@ -1,4 +1,4 @@
-﻿using Common.Application.Infrastructure.Operations;
+﻿using Common.Utilities.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
@@ -16,20 +16,20 @@ internal class GetPasswordResetInfoHandler(IRepositoryManager unitOfWork)
 
         if (!succeeded)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidToken);
+                Value: Errors.InvalidToken);
 
         var user = await unitOfWork.Users.GetUserByEmailAsync(email) ??
             throw new AggregateException($"Unable to read the valid password-reset token: {request.Token}");
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.LockedUser);
+                Value: Errors.LockedUser);
 
         if (!string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidToken);
+                Value: Errors.InvalidToken);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Email);
+        return new OperationResult(OperationStatus.Completed, Value: user.Email);
     }
 }
 

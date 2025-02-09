@@ -1,9 +1,8 @@
-using Common.Persistence.MongoDB;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-namespace Identity.Infrastructure.Database;
+namespace Common.Persistence.MongoDB;
 
 public class MongoDBContext
 {

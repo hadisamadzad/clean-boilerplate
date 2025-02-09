@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
@@ -22,7 +22,7 @@ internal class CheckUsernameHandler(IRepositoryManager unitOfWork) : IRequestHan
 
         var isAvailable = user is null;
 
-        return new OperationResult(OperationStatus.Completed, value: isAvailable);
+        return new OperationResult(OperationStatus.Completed, Value: isAvailable);
     }
 }
 

@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
@@ -53,7 +53,7 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
             RefreshToken = user.CreateJwtRefreshToken()
         };
 
-        return new OperationResult(OperationStatus.Completed, value: result);
+        return new OperationResult(OperationStatus.Completed, Value: result);
     }
 }
 

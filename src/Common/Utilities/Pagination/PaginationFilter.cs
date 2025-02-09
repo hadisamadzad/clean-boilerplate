@@ -1,4 +1,4 @@
-namespace Common.Application.Infrastructure.Pagination;
+namespace Common.Utilities.Pagination;
 
 public record PaginationFilter
 {

@@ -1,4 +1,4 @@
-using Common.Application.Infrastructure.Operations;
+using Common.Utilities.Operations;
 using Identity.Application.Types.Models.Auth;
 using Identity.Application.Types.Models.Users;
 using Identity.Application.UseCases.Auth;

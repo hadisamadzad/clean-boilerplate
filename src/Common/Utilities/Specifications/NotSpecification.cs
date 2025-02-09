@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Common.Specifications;
+namespace Common.Utilities.Specifications;
 
 public class NotSpecification<T>(Specification<T> left) : Specification<T>
 {

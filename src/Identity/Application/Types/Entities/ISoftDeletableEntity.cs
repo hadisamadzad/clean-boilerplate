@@ -1,3 +1,5 @@
+using Common.Interfaces;
+
 namespace Identity.Application.Types.Entities;
 
 public interface ISoftDeletableEntity : IEntity

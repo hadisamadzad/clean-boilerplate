@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
@@ -23,7 +23,7 @@ internal class UpdateUserStateHandler(IRepositoryManager unitOfWork) :
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidId);
+                Value: Errors.InvalidId);
 
         // Update
         user.State = request.State;
@@ -31,7 +31,7 @@ internal class UpdateUserStateHandler(IRepositoryManager unitOfWork) :
 
         _ = await unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Id);
+        return new OperationResult(OperationStatus.Completed, Value: user.Id);
     }
 }
 

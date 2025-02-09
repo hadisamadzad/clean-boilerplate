@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
-using Identity.Application.Interfaces.Repositories;
-using Identity.Application.Types.Entities;
+using Common.Interfaces;
 using MongoDB.Driver;
 
-namespace Identity.Infrastructure.Database.Repositories;
+namespace Common.Persistence.MongoDB;
 
 public class MongoDbRepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
 {

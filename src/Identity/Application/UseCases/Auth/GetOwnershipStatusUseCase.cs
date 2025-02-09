@@ -1,4 +1,4 @@
-﻿using Common.Application.Infrastructure.Operations;
+﻿using Common.Utilities.Operations;
 using Identity.Application.Interfaces;
 using MediatR;
 
@@ -13,7 +13,7 @@ internal class GetOwnershipStatusHandler(IRepositoryManager unitOfWork)
         // Check initial registration
         var isAlreadyOwned = await unitOfWork.Users.AnyUsersAsync();
 
-        return new OperationResult(OperationStatus.Completed, value: isAlreadyOwned);
+        return new OperationResult(OperationStatus.Completed, Value: isAlreadyOwned);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using Common.Application.Infrastructure.Operations;
+﻿using Common.Utilities.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
@@ -30,7 +30,7 @@ internal class RefreshTokenHandler(IRepositoryManager unitOfWork) : IRequestHand
             AccessToken = user.CreateJwtAccessToken(),
         };
 
-        return new OperationResult(OperationStatus.Completed, value: result);
+        return new OperationResult(OperationStatus.Completed, Value: result);
     }
 }
 

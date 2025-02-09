@@ -1,9 +1,8 @@
-using Common.Application.Infrastructure.Errors;
 using Microsoft.AspNetCore.Http;
 
-namespace Common.Application.Infrastructure.Operations;
+namespace Common.Utilities.Operations;
 
-public static class OperationResultExtension
+public static class OperationResultExtensions
 {
     public static IResult GetHttpResult(this OperationResult operation)
     {

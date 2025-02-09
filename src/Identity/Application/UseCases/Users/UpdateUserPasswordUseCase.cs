@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
@@ -24,17 +24,17 @@ public class UpdateUserPasswordHandler(IRepositoryManager unitOfWork) :
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidId);
+                Value: Errors.InvalidId);
 
         if (PasswordHelper.CheckPasswordHash(user.PasswordHash, request.CurrentPassword))
             user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
         else
-            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidCredentials);
+            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidCredentials);
 
         user.UpdatedAt = DateTime.UtcNow;
         _ = await unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Id);
+        return new OperationResult(OperationStatus.Completed, Value: user.Id);
     }
 }
 

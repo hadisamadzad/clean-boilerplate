@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
@@ -20,13 +20,13 @@ internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         // Check if user is admin
         var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
         if (requesterUser is null)
-            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidId);
+            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidId);
+                Value: Errors.InvalidId);
 
         // Update
         user.FirstName = request.FirstName;
@@ -35,7 +35,7 @@ internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         user.UpdatedAt = DateTime.UtcNow;
         _ = await unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Id);
+        return new OperationResult(OperationStatus.Completed, Value: user.Id);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using Common.Application.Infrastructure.Operations;
+﻿using Common.Utilities.Operations;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Users;
@@ -14,12 +14,12 @@ public class GetUserByIdHandler(IRepositoryManager unitOfWork) : IRequestHandler
         // Get
         var entity = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (entity is null)
-            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidId);
+            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
 
         // Mapping
         var model = entity.MapToUserModel();
 
-        return new OperationResult(OperationStatus.Completed, value: model);
+        return new OperationResult(OperationStatus.Completed, Value: model);
     }
 }
 

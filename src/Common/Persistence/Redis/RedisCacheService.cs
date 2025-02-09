@@ -1,7 +1,7 @@
-using Common.Application.Interfaces;
+using Common.Interfaces;
 using StackExchange.Redis;
 
-namespace Common.Persistence.DistributedCache.Redis;
+namespace Common.Persistence.Redis;
 
 public class RedisCacheService : ICacheService
 {

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Common.Specifications;
+namespace Common.Utilities.Specifications;
 
 public abstract class Specification<T>
 {

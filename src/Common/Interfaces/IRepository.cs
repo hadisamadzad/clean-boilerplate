@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
-using Identity.Application.Types.Entities;
 
-namespace Identity.Application.Interfaces.Repositories;
+namespace Common.Interfaces;
 
 public interface IRepository<TEntity> where TEntity : class, IEntity
 {

@@ -1,5 +1,5 @@
-﻿using Common.Application.Infrastructure.Operations;
-using Common.Helpers;
+﻿using Common.Helpers;
+using Common.Utilities.Operations;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
@@ -30,11 +30,11 @@ internal class SendPasswordResetEmailHandler(
         var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
         if (user is null)
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.InvalidId);
+                Value: Errors.InvalidId);
 
         if (user.IsLockedOutOrNotActive())
             return new OperationResult(OperationStatus.Unprocessable,
-                value: Errors.LockedUser);
+                Value: Errors.LockedUser);
 
         var expirationTime = ExpirationTimeHelper
             .GetExpirationTime(_passwordResetConfig.LinkLifetimeInDays);
@@ -53,7 +53,7 @@ internal class SendPasswordResetEmailHandler(
         _ = await transactionalEmailService.SendEmailByTemplateIdAsync(
             _passwordResetConfig.BrevoTemplateId, [email], @params);
 
-        return new OperationResult(OperationStatus.Completed, value: user.Id);
+        return new OperationResult(OperationStatus.Completed, Value: user.Id);
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using Identity.Application.Types.Entities;
+﻿using Common.Interfaces;
+using Identity.Application.Types.Entities;
 
 namespace Identity.Application.Interfaces.Repositories;
 

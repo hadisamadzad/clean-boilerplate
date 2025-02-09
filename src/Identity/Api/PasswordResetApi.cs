@@ -1,4 +1,4 @@
-using Common.Application.Infrastructure.Operations;
+using Common.Utilities.Operations;
 using Identity.Application.UseCases.PasswordReset;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,6 @@
-﻿namespace Identity.Application.Types.Entities;
+﻿using Common.Interfaces;
+
+namespace Identity.Application.Types.Entities;
 
 public class UserEntity : IEntity
 {

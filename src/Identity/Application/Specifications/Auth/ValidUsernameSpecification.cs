@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using Common.Specifications;
+using Common.Utilities.Specifications;
 
 namespace Identity.Application.Specifications.Auth;
 
