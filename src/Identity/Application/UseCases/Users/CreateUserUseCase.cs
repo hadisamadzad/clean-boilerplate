@@ -1,5 +1,5 @@
 ﻿using Common.Helpers;
-using Common.Utilities.Operations;
+using Common.Utilities.OperationResult;
 using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;

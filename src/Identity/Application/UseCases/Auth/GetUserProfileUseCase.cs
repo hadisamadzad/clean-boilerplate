@@ -1,4 +1,4 @@
-﻿using Common.Utilities.Operations;
+﻿using Common.Utilities.OperationResult;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Users;

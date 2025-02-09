@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Common.Utilities.Operations;
+namespace Common.Utilities.OperationResult;
 
 public static class OperationResultExtensions
 {

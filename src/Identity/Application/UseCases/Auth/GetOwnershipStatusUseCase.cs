@@ -1,4 +1,4 @@
-﻿using Common.Utilities.Operations;
+﻿using Common.Utilities.OperationResult;
 using Identity.Application.Interfaces;
 using MediatR;
 

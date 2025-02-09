@@ -1,4 +1,4 @@
-namespace Common.Utilities.Operations;
+namespace Common.Utilities.OperationResult;
 
 public record OperationResult(OperationStatus Status, object Value)
 {
