@@ -1,17 +1,16 @@
 ﻿using Common.Application.Configs;
 using Identity.Infrastructure.Database;
-using MongoDB.Driver;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-public static class MongoDBRegistration
+public static class MongoDbServiceExtensions
 {
     public static IServiceCollection AddConfiguredMongoDB(this IServiceCollection services,
         IConfiguration configuration)
     {
         var config = configuration.GetSection(MongoDBConfig.Key).Get<MongoDBConfig>();
 
-        services.AddSingleton<IMongoDatabase>(MongoDBContext.Connect(config));
+        services.AddSingleton(MongoDBContext.Connect(config));
 
         return services;
     }

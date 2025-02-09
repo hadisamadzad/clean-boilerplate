@@ -7,7 +7,6 @@ using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Specifications;
 using Identity.Application.Types.Entities;
-using Identity.Application.Types.Entities.Users;
 using MediatR;
 
 namespace Identity.Application.UseCases.Users;
@@ -34,7 +33,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
 
         // Checking duplicate email
         var isDuplicate = await unitOfWork.Users
-            .ExistsAsync(UserSpecification.DuplicateUser(request.Email));
+            .ExistsAsync(x => x.Email.ToLower() == email.ToLower());
         if (isDuplicate)
             return new OperationResult(OperationStatus.Unprocessable,
                 value: Errors.DuplicateUsername);

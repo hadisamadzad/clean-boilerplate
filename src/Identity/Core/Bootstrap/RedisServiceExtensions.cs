@@ -1,15 +1,14 @@
-﻿using Common.Application.Configs;
-using Common.App.DependencyInjection;
+﻿using Common.App.DependencyInjection;
+using Common.Application.Configs;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-public static class RedisRegistration
+public static class RedisServiceExtensions
 {
     public static IServiceCollection AddConfiguredRedisCache(this IServiceCollection services,
         IConfiguration configuration)
     {
         var config = configuration.GetSection(RedisCacheConfig.Key).Get<RedisCacheConfig>();
-        //services.Configure<RedisCacheConfig>(configuration.GetSection(RedisCacheConfig.Key));
 
         // Distributed caching
         services.AddStackExchangeRedis("identity", config);

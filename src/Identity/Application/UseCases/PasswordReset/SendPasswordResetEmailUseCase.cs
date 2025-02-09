@@ -13,7 +13,7 @@ namespace Identity.Application.UseCases.PasswordReset;
 // Handler
 internal class SendPasswordResetEmailHandler(
     IRepositoryManager unitOfWork,
-    ITransactionalEmailService transactionalEmailService,
+    IEmailService transactionalEmailService,
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<SendPasswordResetEmailCommand, OperationResult>
 {

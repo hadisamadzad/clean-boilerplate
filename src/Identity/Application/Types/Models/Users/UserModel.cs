@@ -1,5 +1,4 @@
 ﻿using Identity.Application.Types.Entities;
-using Identity.Application.Types.Entities.Users;
 
 namespace Identity.Application.Types.Models.Users;
 

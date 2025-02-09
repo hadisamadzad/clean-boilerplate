@@ -24,7 +24,7 @@ public static class DevEndpoints
 
         // Test email service
         group.MapGet("email", async (
-            ITransactionalEmailService emailService) =>
+            IEmailService emailService) =>
             {
                 var parameters = new Dictionary<string, string>
                 {

@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Identity.Api;
 using Identity.Application.Interfaces;
-using Identity.Core.ServiceRegistrations;
+using Identity.Core.Bootstrap;
 using Identity.Infrastructure.Database;
 using Serilog;
 
@@ -56,7 +56,7 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
 //builder.Services.AddSingleton<ITransactionalEmailService, BrevoEmailService>();
 
-builder.Services.AddConfiguredHttpClient(configs);
+builder.Services.AddConfiguredBrevo(configs);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddConfiguredSwagger();

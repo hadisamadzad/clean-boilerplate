@@ -1,6 +1,6 @@
 namespace Identity.Application.Interfaces;
 
-public interface ITransactionalEmailService
+public interface IEmailService
 {
     Task<bool> SendEmailByTemplateIdAsync(long templateId, List<string> recipients,
         Dictionary<string, string> parameters);

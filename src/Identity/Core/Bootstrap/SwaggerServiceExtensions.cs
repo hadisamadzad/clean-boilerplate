@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-public static class SwaggerRegistration
+public static class SwaggerServiceExtensions
 {
     public static IServiceCollection AddConfiguredSwagger(this IServiceCollection services)
     {
@@ -17,7 +17,6 @@ public static class SwaggerRegistration
                     Version = "1"
                 });
         });
-
 
         return services;
     }

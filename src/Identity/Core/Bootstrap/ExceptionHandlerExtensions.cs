@@ -1,11 +1,12 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-internal static class ExceptionHandlerRegistration
+internal static class ExceptionHandlerExtensions
 {
-    public static void UseConfiguredExceptionHandler(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static void UseConfiguredExceptionHandler(this IApplicationBuilder app,
+        IWebHostEnvironment env)
     {
         app.UseExceptionHandler(errorApp =>
             errorApp.Run(async context =>

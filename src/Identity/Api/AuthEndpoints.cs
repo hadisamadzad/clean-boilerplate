@@ -1,6 +1,5 @@
 using Common.Application.Infrastructure.Operations;
 using Identity.Application.Types.Models.Auth;
-using Identity.Application.Types.Models.Base.Auth;
 using Identity.Application.Types.Models.Users;
 using Identity.Application.UseCases.Auth;
 using MediatR;

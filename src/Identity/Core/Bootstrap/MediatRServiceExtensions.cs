@@ -1,8 +1,8 @@
 ﻿using Identity.Application.UseCases.Auth;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-public static class MediatRRegistration
+public static class MediatRServiceExtensions
 {
     public static IServiceCollection AddConfiguredMediatR(this IServiceCollection services)
     {

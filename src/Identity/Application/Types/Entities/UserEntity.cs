@@ -1,6 +1,4 @@
-﻿using Identity.Application.Types.Entities.Users;
-
-namespace Identity.Application.Types.Entities;
+﻿namespace Identity.Application.Types.Entities;
 
 public class UserEntity : IEntity
 {

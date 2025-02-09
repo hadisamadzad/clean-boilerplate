@@ -1,4 +1,4 @@
-namespace Identity.Application.Types.Models.Base.Auth;
+namespace Identity.Application.Types.Models.Auth;
 
 public record TokenResult
 {

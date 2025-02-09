@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace Identity.Infrastructure;
 
 public class BrevoEmailService(HttpClient httpClient, IOptions<BrevoConfig> brevoConfig) :
-    ITransactionalEmailService
+    IEmailService
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly BrevoConfig _brevoConfig = brevoConfig.Value;

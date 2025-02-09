@@ -2,17 +2,18 @@
 using Identity.Application.Types.Configs;
 using Identity.Infrastructure;
 
-namespace Identity.Core.ServiceRegistrations;
+namespace Identity.Core.Bootstrap;
 
-public static class HttpClientRegistration
+public static class BrevoServiceExtensions
 {
-    public static IServiceCollection AddConfiguredHttpClient(this IServiceCollection services,
+    public static IServiceCollection AddConfiguredBrevo(this IServiceCollection services,
         IConfiguration configuration)
     {
         var brevoConfig = configuration.GetSection(BrevoConfig.Key).Get<BrevoConfig>();
+        services.Configure<BrevoConfig>(configuration.GetSection(BrevoConfig.Key));
 
         // Brevo client
-        services.AddHttpClient<ITransactionalEmailService, BrevoEmailService>((serviceProvider, client) =>
+        services.AddHttpClient<IEmailService, BrevoEmailService>((serviceProvider, client) =>
         {
             client.BaseAddress = new Uri(brevoConfig.BaseAddress);
         });

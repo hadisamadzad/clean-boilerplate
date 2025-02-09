@@ -1,4 +1,4 @@
-﻿namespace Identity.Application.Types.Entities.Users;
+﻿namespace Identity.Application.Types.Entities;
 
 public enum Role
 {

@@ -1,7 +1,7 @@
 using Identity.Application.Types.Entities;
 using Identity.Application.Types.Models.Users;
 
-namespace Identity.Database.Extensions;
+namespace Identity.Infrastructure.Database.Extensions;
 
 public static class UserQueryableExtension
 {

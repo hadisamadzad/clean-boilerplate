@@ -1,6 +1,5 @@
 ﻿using Identity.Application.Types.Configs;
 using Identity.Application.Types.Entities;
-using Identity.Application.Types.Entities.Users;
 
 namespace Identity.Application.Helpers;
 

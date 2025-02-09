@@ -7,7 +7,6 @@ using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Specifications.Auth;
 using Identity.Application.Types.Entities;
-using Identity.Application.Types.Entities.Users;
 using Identity.Application.Types.Models.Auth;
 using MediatR;
 
