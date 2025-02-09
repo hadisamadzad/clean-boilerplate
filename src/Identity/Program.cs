@@ -74,8 +74,10 @@ app.UseCors("general");
 app.MapHealthChecks("/health");
 
 // Add endpoints
+app.MapDevEndpoints();
 app.MapAuthEndpoints();
 app.MapPasswordResetEndpoints();
+app.MapUserEndpoints();
 
 if (!app.Environment.IsProduction())
     app.UseConfiguredSwagger();

@@ -1,4 +1,3 @@
-using Common.Api.Infrastructure;
 using Common.Application.Infrastructure.Operations;
 using Identity.Application.Types.Models.Auth;
 using Identity.Application.Types.Models.Base.Auth;
@@ -9,8 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api;
 
-public static class AuthApi
+public static class AuthEndpoints
 {
+    const string Route = "api/auth/";
+    const string Tag = "Auth";
+
     // Models
     public record LoginRequest(string Email, string Password);
     public record RegisterRequest(string Email, string Password);
@@ -19,7 +21,7 @@ public static class AuthApi
     // Endpoints
     public static void MapAuthEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup(Routes.Auth).WithTags("Auth");
+        var group = app.MapGroup(Route).WithTags(Tag);
 
         // Ownership check endpoint
         group.MapGet("ownership-check", async (
@@ -42,7 +44,7 @@ public static class AuthApi
                 };
             });
 
-        // Profile endpoint
+        // Endpoint for getting user profile
         group.MapGet("profile", async (
             IMediator mediator,
             [FromHeader] string requestedBy) =>
@@ -71,7 +73,33 @@ public static class AuthApi
                 };
             });
 
-        // Login endpoint
+        // Endpoint for registration
+        group.MapPost("register", async (
+            IMediator mediator,
+            [FromBody] RegisterRequest request) =>
+            {
+                return await mediator.Send(new RegisterCommand
+                (
+                    Email: request.Email?.Trim(),
+                    Password: request.Password?.Trim()
+                ));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                if (operation.Value is not RegisterResult value)
+                    return operation.Value;
+
+                return new
+                {
+                    Id = value.UserId
+                };
+            });
+
+        // Endpoint for logging in
         group.MapPost("login", async (
             IMediator mediator,
             [FromBody] LoginRequest request) =>
@@ -100,33 +128,7 @@ public static class AuthApi
                 };
             });
 
-        // Register endpoint
-        group.MapPost("register", async (
-            IMediator mediator,
-            [FromBody] RegisterRequest request) =>
-            {
-                return await mediator.Send(new RegisterCommand
-                (
-                    Email: request.Email?.Trim(),
-                    Password: request.Password?.Trim()
-                ));
-            })
-            .AddEndpointFilter(async (context, next) =>
-            {
-                var operation = await next(context) as OperationResult;
-                if (!operation!.Succeeded)
-                    return operation.GetHttpResult();
-
-                if (operation.Value is not RegisterResult value)
-                    return operation.Value;
-
-                return new
-                {
-                    Id = value.UserId
-                };
-            });
-
-        // Username check endpoint
+        // Endpoint for checking username
         group.MapGet("username-check", async (
             IMediator mediator,
             [FromQuery] string email) =>

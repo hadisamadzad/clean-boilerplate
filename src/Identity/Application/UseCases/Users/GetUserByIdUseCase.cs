@@ -6,6 +6,7 @@ using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
+// Handler
 public class GetUserByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserByIdQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
@@ -21,3 +22,6 @@ public class GetUserByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUse
         return new OperationResult(OperationStatus.Completed, value: model);
     }
 }
+
+// Model
+public record GetUserByIdQuery(string UserId) : IRequest<OperationResult>;

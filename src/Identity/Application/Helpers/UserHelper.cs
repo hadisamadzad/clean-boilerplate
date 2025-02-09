@@ -42,6 +42,11 @@ public static class UserHelper
     public static string CreateJwtRefreshToken(this UserEntity user) =>
         JwtHelper.CreateJwtRefreshToken(user.Id, user.Email);
 
-    public static bool IsAdmin(this UserEntity user) =>
-        user.Role is Role.Admin;
+    public static bool HasAdminRole(this UserEntity user)
+    {
+        Role[] adminRoles = [Role.Owner, Role.Admin];
+        return adminRoles.Contains(user.Role);
+    }
+
+
 }

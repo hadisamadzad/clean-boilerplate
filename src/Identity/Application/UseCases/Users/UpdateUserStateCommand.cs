@@ -4,9 +4,4 @@ using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
-public record UpdateUserStateCommand : IRequest<OperationResult>
-{
-    public string UserId { get; init; }
-
-    public UserState State { get; init; }
-}
+public record UpdateUserStateCommand(string AdminUserId, string UserId, UserState State) : IRequest<OperationResult>;

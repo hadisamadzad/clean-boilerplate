@@ -11,13 +11,13 @@ public static class AllowedCharacters
 
 public static class RandomGenerator
 {
+    readonly static Random randomGenerator = new();
+
     public static string GenerateString(int length, string allowedCharacters, string prefix = null)
     {
         var randomChars = new char[length];
-        var rndgen = new Random();
-
         for (var i = 0; i < length; ++i)
-            randomChars[i] = allowedCharacters[rndgen.Next(allowedCharacters.Length)];
+            randomChars[i] = allowedCharacters[randomGenerator.Next(allowedCharacters.Length)];
 
         return $"{prefix}{new string(randomChars)}";
     }
@@ -25,7 +25,7 @@ public static class RandomGenerator
     public static int GenerateNumber(int max, int min = 0)
     {
         if (max < min || max < 0 || min < 0)
-            throw new ArgumentOutOfRangeException();
-        return new Random().Next(min, max);
+            throw new ArgumentOutOfRangeException($"Invalid arguments: min={min} max={max}");
+        return randomGenerator.Next(min, max);
     }
 }

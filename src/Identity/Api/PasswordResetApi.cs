@@ -8,7 +8,8 @@ namespace Identity.Api;
 
 public static class PasswordResetApi
 {
-    public const string EndpointTag = "PasswordReset";
+    const string Route = "api/auth/";
+    const string Tag = "PasswordReset";
 
     // Models
     public record SendPasswordResetEmailRequest(string Email);
@@ -17,8 +18,10 @@ public static class PasswordResetApi
     // Endpoints
     public static void MapPasswordResetEndpoints(this WebApplication app)
     {
+        var group = app.MapGroup(Route).WithTags(Tag);
+
         // Get password reset info
-        app.MapGet(Routes.Auth + "password-reset", async (
+        group.MapGet(Route + "password-reset", async (
             IMediator mediator,
             [FromQuery] string token) =>
             {
@@ -37,11 +40,10 @@ public static class PasswordResetApi
                 {
                     Email = value
                 };
-            })
-            .WithTags(EndpointTag);
+            });
 
         // Send password reset email
-        app.MapPost(Routes.Auth + "password-reset", async (
+        group.MapPost(Route + "password-reset", async (
             IMediator mediator,
             [FromBody] SendPasswordResetEmailRequest request) =>
             {
@@ -60,11 +62,10 @@ public static class PasswordResetApi
                 {
                     UserId = value.Encode()
                 };
-            })
-            .WithTags(EndpointTag);
+            });
 
         // Reset password
-        app.MapPatch(Routes.Auth + "password-reset", async (
+        group.MapPatch(Route + "password-reset", async (
             IMediator mediator,
             [FromBody] ResetPasswordRequest request) =>
             {
@@ -83,7 +84,6 @@ public static class PasswordResetApi
                 {
                     UserId = value.Encode()
                 };
-            })
-            .WithTags(EndpointTag);
+            });
     }
 }

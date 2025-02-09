@@ -1,11 +1,13 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
 using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
+// Handler
 internal class UpdateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -14,6 +16,11 @@ internal class UpdateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<Updat
         var validation = new UpdateUserValidator().Validate(request);
         if (!validation.IsValid)
             return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+
+        // Check if user is admin
+        var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
+        if (requesterUser is null)
+            return new OperationResult(OperationStatus.Unprocessable, value: Errors.InvalidId);
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
@@ -29,5 +36,37 @@ internal class UpdateUserHandler(IUnitOfWork unitOfWork) : IRequestHandler<Updat
         _ = await unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
+    }
+}
+
+// Model
+public record UpdateUserCommand(
+    string AdminUserId,
+    string UserId,
+    string FirstName,
+    string LastName
+) : IRequest<OperationResult>;
+
+// Model Validator
+public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
+{
+    public UpdateUserValidator()
+    {
+        // User id
+        RuleFor(x => x.UserId)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidId);
+
+        // First name
+        RuleFor(x => x.FirstName)
+            .Length(2, 80)
+            .When(x => !string.IsNullOrEmpty(x.FirstName))
+            .WithState(_ => Errors.InvalidFirstName);
+
+        // Last name
+        RuleFor(x => x.LastName)
+            .Length(2, 80)
+            .When(x => !string.IsNullOrEmpty(x.LastName))
+            .WithState(_ => Errors.InvalidLastName);
     }
 }
