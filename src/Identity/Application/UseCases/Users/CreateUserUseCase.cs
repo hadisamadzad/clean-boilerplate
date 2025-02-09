@@ -33,7 +33,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
 
         // Checking duplicate email
         var isDuplicate = await unitOfWork.Users
-            .ExistsAsync(x => x.Email.ToLower() == email.ToLower());
+            .ExistsAsync(x => x.Email.ToLower() == request.Email.ToLower());
         if (isDuplicate)
             return new OperationResult(OperationStatus.Unprocessable,
                 value: Errors.DuplicateUsername);

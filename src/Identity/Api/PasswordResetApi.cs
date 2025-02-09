@@ -20,6 +20,28 @@ public static class PasswordResetApi
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 
+        // Send password reset email
+        group.MapPost(Route + "password-reset", async (
+            IMediator mediator,
+            [FromBody] SendPasswordResetEmailRequest request) =>
+            {
+                return await mediator.Send(new SendPasswordResetEmailCommand(request.Email));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                if (operation.Value is not string value)
+                    return operation.Value;
+
+                return new
+                {
+                    UserId = value
+                };
+            });
+
         // Get password reset info
         group.MapGet(Route + "password-reset", async (
             IMediator mediator,
@@ -42,28 +64,6 @@ public static class PasswordResetApi
                 };
             });
 
-        // Send password reset email
-        group.MapPost(Route + "password-reset", async (
-            IMediator mediator,
-            [FromBody] SendPasswordResetEmailRequest request) =>
-            {
-                return await mediator.Send(new SendPasswordResetEmailCommand(request.Email));
-            })
-            .AddEndpointFilter(async (context, next) =>
-            {
-                var operation = await next(context) as OperationResult;
-                if (!operation!.Succeeded)
-                    return operation.GetHttpResult();
-
-                if (operation.Value is not int value)
-                    return operation.Value;
-
-                return new
-                {
-                    UserId = value.Encode()
-                };
-            });
-
         // Reset password
         group.MapPatch(Route + "password-reset", async (
             IMediator mediator,
@@ -77,12 +77,12 @@ public static class PasswordResetApi
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not int value)
+                if (operation.Value is not string value)
                     return operation.Value;
 
                 return new
                 {
-                    UserId = value.Encode()
+                    UserId = value
                 };
             });
     }

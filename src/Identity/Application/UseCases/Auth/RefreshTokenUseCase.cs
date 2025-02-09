@@ -2,7 +2,7 @@
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
-using Identity.Application.Types.Models.Base.Auth;
+using Identity.Application.Types.Models.Auth;
 using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
