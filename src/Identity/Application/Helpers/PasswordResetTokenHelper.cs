@@ -1,4 +1,4 @@
-﻿using Common.Application.Helpers;
+﻿using Common.Helpers;
 
 namespace Identity.Application.Helpers;
 

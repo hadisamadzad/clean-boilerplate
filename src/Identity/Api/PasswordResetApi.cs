@@ -1,4 +1,3 @@
-using Common.Api.Infrastructure;
 using Common.Application.Infrastructure.Operations;
 using Identity.Application.UseCases.PasswordReset;
 using MediatR;

@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Common.Application.Specifications;
+using Common.Specifications;
 using Identity.Application.Helpers;
 
 namespace Identity.Application.Specifications.Auth;

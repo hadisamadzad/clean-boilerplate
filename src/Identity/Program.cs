@@ -46,7 +46,6 @@ builder.Services.AddCors(options => options
 
 // Add services to the container
 builder.Services.AddCustomConfigurations(configs);
-builder.Services.AddControllers();
 builder.Services.AddConfiguredMediatR();
 
 builder.Services.AddConfiguredMongoDB(configs);

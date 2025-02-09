@@ -1,17 +1,11 @@
 using System.Linq.Expressions;
 
-namespace Common.Application.Specifications;
+namespace Common.Specifications;
 
-public class AndSpecification<T> : Specification<T>
+public class AndSpecification<T>(Specification<T> left, Specification<T> right) : Specification<T>
 {
-    private readonly Specification<T> _left;
-    private readonly Specification<T> _right;
-
-    public AndSpecification(Specification<T> left, Specification<T> right)
-    {
-        _right = right;
-        _left = left;
-    }
+    private readonly Specification<T> _left = left;
+    private readonly Specification<T> _right = right;
 
     public override Expression<Func<T, bool>> ToExpression()
     {

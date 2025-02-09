@@ -1,15 +1,10 @@
 using System.Linq.Expressions;
 
-namespace Common.Application.Specifications;
+namespace Common.Specifications;
 
-public class NotSpecification<T> : Specification<T>
+public class NotSpecification<T>(Specification<T> left) : Specification<T>
 {
-    private readonly Specification<T> _left;
-
-    public NotSpecification(Specification<T> left)
-    {
-        _left = left;
-    }
+    private readonly Specification<T> _left = left;
 
     public override Expression<Func<T, bool>> ToExpression()
     {

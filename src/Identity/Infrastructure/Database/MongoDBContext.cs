@@ -1,4 +1,4 @@
-using Common.Application.Configs;
+using Common.Persistence.MongoDB;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;

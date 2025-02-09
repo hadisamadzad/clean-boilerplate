@@ -1,4 +1,4 @@
-namespace Common.Utilities.LockManager;
+namespace Common.Persistence.Redis;
 
 public class RedisConfig
 {

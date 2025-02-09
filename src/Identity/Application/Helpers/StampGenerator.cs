@@ -1,4 +1,6 @@
-﻿namespace Identity.Application.Helpers;
+﻿using Common.Helpers;
+
+namespace Identity.Application.Helpers;
 
 public sealed class StampGenerator
 {
