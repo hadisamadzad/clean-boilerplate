@@ -1,8 +1,8 @@
 using Common.Api.Infrastructure;
 using Common.Application.Infrastructure.Operations;
-using Identity.Application.Operations.Auth;
 using Identity.Application.Types.Models.Base.Auth;
 using Identity.Application.Types.Models.Users;
+using Identity.Application.UseCases.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,7 @@ public static class AuthApi
     // Endpoints
     public static void MapAuthEndpoints(this WebApplication app)
     {
-        // Login endpoint
+        // Profile endpoint
         app.MapGet(Routes.Auth + "profile", async (
             IMediator mediator,
             [FromHeader] string requestedBy) =>

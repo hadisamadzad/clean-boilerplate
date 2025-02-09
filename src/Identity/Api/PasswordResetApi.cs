@@ -1,6 +1,6 @@
 using Common.Api.Infrastructure;
 using Common.Application.Infrastructure.Operations;
-using Identity.Application.Operations.PasswordReset;
+using Identity.Application.UseCases.PasswordReset;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

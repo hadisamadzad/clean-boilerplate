@@ -2,7 +2,7 @@ using Common.Api.Extensions.AspNetCore;
 using Common.Api.Infrastructure;
 using Identity.Api.Models.Users;
 using Identity.Api.ResultFilters.Users;
-using Identity.Application.Operations.Users;
+using Identity.Application.UseCases.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-﻿using Identity.Application.Operations.Auth;
+﻿using Identity.Application.UseCases.Auth;
 
 namespace Identity.Core.ServiceRegistrations;
 
