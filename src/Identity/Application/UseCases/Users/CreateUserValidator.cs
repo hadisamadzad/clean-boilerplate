@@ -9,7 +9,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
     {
         // Id
         RuleFor(x => x.AdminUserId)
-            .GreaterThan(0)
+            .NotEmpty()
             .WithState(_ => Errors.InvalidId);
 
         // Email

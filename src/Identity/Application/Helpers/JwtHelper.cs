@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Common.Api.Infrastructure;
 using Identity.Application.Types.Configs;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,10 +10,10 @@ public static class JwtHelper
 {
     public static SecurityTokenConfig Config;
 
-    public static string CreateJwtAccessToken(int userId, string email) =>
+    public static string CreateJwtAccessToken(string userId, string email) =>
         CreateJwt(Config.AccessTokenSecretKey, Config.AccessTokenLifetime, userId, email);
 
-    public static string CreateJwtRefreshToken(int userId, string email) =>
+    public static string CreateJwtRefreshToken(string userId, string email) =>
         CreateJwt(Config.RefreshTokenSecretKey, Config.RefreshTokenLifetime, userId, email);
 
     public static bool IsValidJwtAccessToken(string token) =>
@@ -30,14 +29,14 @@ public static class JwtHelper
     }
 
     // Private methods
-    private static string CreateJwt(string key, TimeSpan lifetime, int userId, string email)
+    private static string CreateJwt(string key, TimeSpan lifetime, string userId, string email)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, userId.Encode()),
+            new(JwtRegisteredClaimNames.Sub, userId),
             new(JwtRegisteredClaimNames.UniqueName, email.ToLower())
         };
 
@@ -45,7 +44,7 @@ public static class JwtHelper
             signingCredentials: credentials,
             issuer: Config.Issuer,
             audience: Config.Audience,
-            claims: claims.ToArray(),
+            claims: [.. claims],
             expires: DateTime.UtcNow.Add(lifetime)
         );
 

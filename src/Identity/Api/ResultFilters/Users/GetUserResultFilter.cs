@@ -14,7 +14,7 @@ public class GetUserResultFilter : ResultFilterAttribute
         if (result?.Value is UserModel value)
             result.Value = new
             {
-                Id = value.Id.Encode(),
+                Id = value.UserId,
                 Email = value.Email,
                 Mobile = value.Mobile,
                 Role = value.Role,

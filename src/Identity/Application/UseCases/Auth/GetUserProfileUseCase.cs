@@ -6,14 +6,14 @@ using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
 
+// Handler
 internal class GetUserProfileHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserProfileQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
         // Validation
-        if (request.RequestedBy == 0)
-            return new OperationResult(OperationStatus.Invalid,
-                Errors.InvalidId);
+        if (string.IsNullOrWhiteSpace(request.RequestedBy))
+            return new OperationResult(OperationStatus.Invalid, Errors.InvalidId);
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.RequestedBy);
@@ -26,3 +26,7 @@ internal class GetUserProfileHandler(IUnitOfWork unitOfWork) : IRequestHandler<G
         return new OperationResult(OperationStatus.Completed, value: response);
     }
 }
+
+// Model
+public record GetUserProfileQuery(
+    string RequestedBy) : IRequest<OperationResult>;

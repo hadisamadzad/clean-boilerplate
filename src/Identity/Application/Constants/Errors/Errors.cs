@@ -34,7 +34,7 @@ public static class Errors
     public static readonly ErrorModel LockedUser =
         new("IDAU-102", "Identity Error", "User is locked out due to multiple failed logins.");
 
-    public static readonly ErrorModel RegistrationAlreadyDone =
+    public static readonly ErrorModel OwnershipAlreadyDone =
         new("IDAU-103", "Identity Error", "Registration is already done.");
 
     public static readonly ErrorModel DuplicateUsername =

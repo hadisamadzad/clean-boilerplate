@@ -1,4 +1,3 @@
-using Common.Api.Infrastructure;
 using Identity.Application.Types.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +13,7 @@ public class CreateUserResultFilter : ResultFilterAttribute
         if (result?.Value is UserEntity value)
             result.Value = new
             {
-                Id = value.Id.Encode(),
+                Id = value.Id,
                 Email = value.Email
             };
 

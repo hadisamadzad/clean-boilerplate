@@ -1,10 +1,13 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
+using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
 using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
 
+// Handler
 internal class CheckUsernameHandler(IUnitOfWork unitOfWork) : IRequestHandler<CheckUsernameQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(CheckUsernameQuery request, CancellationToken cancellationToken)
@@ -20,5 +23,19 @@ internal class CheckUsernameHandler(IUnitOfWork unitOfWork) : IRequestHandler<Ch
         var isAvailable = user is null;
 
         return new OperationResult(OperationStatus.Completed, value: isAvailable);
+    }
+}
+
+// Model
+public record CheckUsernameQuery(string Email) : IRequest<OperationResult>;
+
+// Model Validator
+public class CheckUsernameValidator : AbstractValidator<CheckUsernameQuery>
+{
+    public CheckUsernameValidator()
+    {
+        RuleFor(x => x.Email)
+            .EmailAddress()
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

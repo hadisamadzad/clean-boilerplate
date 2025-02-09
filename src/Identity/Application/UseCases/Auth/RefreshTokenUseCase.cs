@@ -7,6 +7,7 @@ using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
 
+// Handler
 internal class RefreshTokenHandler(IUnitOfWork unitOfWork) : IRequestHandler<RefreshTokenQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
@@ -32,3 +33,7 @@ internal class RefreshTokenHandler(IUnitOfWork unitOfWork) : IRequestHandler<Ref
         return new OperationResult(OperationStatus.Completed, value: result);
     }
 }
+
+// Model
+public record RefreshTokenQuery(
+    string RefreshToken) : IRequest<OperationResult>;

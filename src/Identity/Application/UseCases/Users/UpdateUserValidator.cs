@@ -9,7 +9,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
     {
         // User id
         RuleFor(x => x.UserId)
-            .GreaterThan(0)
+            .NotEmpty()
             .WithState(_ => Errors.InvalidId);
 
         // First name

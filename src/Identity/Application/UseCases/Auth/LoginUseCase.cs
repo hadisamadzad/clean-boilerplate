@@ -1,5 +1,6 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
@@ -8,6 +9,7 @@ using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
 
+// Handler
 internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -52,5 +54,26 @@ internal class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginComma
         };
 
         return new OperationResult(OperationStatus.Completed, value: result);
+    }
+}
+
+// Model
+public record LoginCommand(
+    string Email,
+    string Password) : IRequest<OperationResult>;
+
+// Model Validator
+public class LoginValidator : AbstractValidator<LoginCommand>
+{
+    public LoginValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .EmailAddress()
+            .WithState(_ => Errors.InvalidEmail);
+
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidPassword);
     }
 }

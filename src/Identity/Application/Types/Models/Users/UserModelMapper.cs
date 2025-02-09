@@ -12,7 +12,7 @@ public static class UserModelMapper
 
         return new UserModel
         {
-            Id = entity.Id,
+            UserId = entity.Id,
             Email = entity.Email,
             IsEmailConfirmed = entity.IsEmailConfirmed,
             Mobile = entity.Mobile,

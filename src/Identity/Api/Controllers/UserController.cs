@@ -22,7 +22,7 @@ public class UserController(IMediator mediator) : ControllerBase
         // Operation
         var operation = await _mediator.Send(new CreateUserCommand
         {
-            AdminUserId = requestedBy.Decode(),
+            AdminUserId = requestedBy,
 
             Email = request.Email,
             Password = request.Password,
@@ -40,7 +40,7 @@ public class UserController(IMediator mediator) : ControllerBase
         // Operation
         var operation = await _mediator.Send(new GetUserByIdQuery
         {
-            UserId = userId.Decode()
+            UserId = userId
         });
 
         return this.ReturnResponse(operation);
@@ -53,7 +53,7 @@ public class UserController(IMediator mediator) : ControllerBase
         // Operation
         var operation = await _mediator.Send(new UpdateUserCommand
         {
-            UserId = userId.Decode(),
+            UserId = userId,
             FirstName = request.FirstName,
             LastName = request.LastName
         });
@@ -68,7 +68,7 @@ public class UserController(IMediator mediator) : ControllerBase
         // Operation
         var operation = await _mediator.Send(new UpdateUserStateCommand
         {
-            UserId = userId.Decode(),
+            UserId = userId,
             State = request.State
         });
 
@@ -82,7 +82,7 @@ public class UserController(IMediator mediator) : ControllerBase
         // Operation
         var operation = await _mediator.Send(new UpdateUserPasswordCommand
         {
-            UserId = userId.Decode(),
+            UserId = userId,
             CurrentPassword = request.CurrentPassword,
             NewPassword = request.NewPassword
         });

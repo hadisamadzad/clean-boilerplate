@@ -6,7 +6,7 @@ namespace Identity.Application.UseCases.Users;
 
 public record UpdateUserStateCommand : IRequest<OperationResult>
 {
-    public int UserId { get; init; }
+    public string UserId { get; init; }
 
     public UserState State { get; init; }
 }

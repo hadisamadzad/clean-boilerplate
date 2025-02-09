@@ -12,7 +12,7 @@ public class UserRepository(IMongoDatabase database, string collectionName) :
         return await _collection.Find(x => true).AnyAsync();
     }
 
-    public async Task<UserEntity> GetUserByIdAsync(int id)
+    public async Task<UserEntity> GetUserByIdAsync(string id)
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }

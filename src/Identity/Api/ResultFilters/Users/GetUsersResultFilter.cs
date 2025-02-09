@@ -20,7 +20,7 @@ public class GetUsersResultFilter : ResultFilterAttribute
                 value.TotalCount,
                 Data = value.Data.Select(x => new
                 {
-                    Id = x.Id.Encode(),
+                    Id = x.UserId,
                     Email = x.Email,
                     FullName = x.FullName,
                     Role = nameof(x.Role),

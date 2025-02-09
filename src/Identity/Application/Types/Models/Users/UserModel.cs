@@ -5,8 +5,7 @@ namespace Identity.Application.Types.Models.Users;
 
 public record UserModel
 {
-    public int Id { get; set; }
-    public Guid Uid { get; set; }
+    public string UserId { get; set; }
 
     public string Email { get; set; }
     public bool IsEmailConfirmed { get; set; }

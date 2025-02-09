@@ -5,5 +5,5 @@ namespace Identity.Application.UseCases.Users;
 
 public record GetUserByIdQuery : IRequest<OperationResult>
 {
-    public required int UserId { get; init; }
+    public required string UserId { get; init; }
 }
