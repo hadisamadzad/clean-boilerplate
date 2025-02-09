@@ -4,8 +4,11 @@ public static class EnumExtension
 {
     public static int GetMaxLength(this Enum value)
     {
-        var type = value.GetType();
-        var names = Enum.GetNames(type);
-        return names.Select(name => name.Length).Concat([0]).Max();
+        return Enum.GetNames(value.GetType()).Max(x => x.Length);
+    }
+
+    public static int GetEnumMaxLength(this Type type)
+    {
+        return Enum.GetNames(type).Append(string.Empty).Max(x => x.Length);
     }
 }
