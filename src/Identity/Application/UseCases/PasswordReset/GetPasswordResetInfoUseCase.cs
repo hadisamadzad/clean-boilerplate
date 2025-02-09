@@ -7,7 +7,7 @@ using MediatR;
 namespace Identity.Application.UseCases.PasswordReset;
 
 // Handler
-internal class GetPasswordResetInfoHandler(IUnitOfWork unitOfWork)
+internal class GetPasswordResetInfoHandler(IRepositoryManager unitOfWork)
     : IRequestHandler<GetPasswordResetInfoQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetPasswordResetInfoQuery request, CancellationToken cancellationToken)

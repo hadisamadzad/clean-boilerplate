@@ -9,7 +9,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-internal class UpdateUserStateHandler(IUnitOfWork unitOfWork) :
+internal class UpdateUserStateHandler(IRepositoryManager unitOfWork) :
     IRequestHandler<UpdateUserStateCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateUserStateCommand request, CancellationToken cancellationToken)

@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace Identity.Infrastructure.Database;
 
-public class UnitOfWork(IMongoDatabase mongoDatabase) : IUnitOfWork
+public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManager
 {
     public IUserRepository Users { get; } = new UserRepository(mongoDatabase, "users");
 

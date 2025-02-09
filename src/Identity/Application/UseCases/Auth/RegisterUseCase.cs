@@ -14,7 +14,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class RegisterHandler(IUnitOfWork unitOfWork)
+internal class RegisterHandler(IRepositoryManager unitOfWork)
     : IRequestHandler<RegisterCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)

@@ -5,7 +5,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class GetOwnershipStatusHandler(IUnitOfWork unitOfWork)
+internal class GetOwnershipStatusHandler(IRepositoryManager unitOfWork)
     : IRequestHandler<GetOwnershipStatusQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetOwnershipStatusQuery request, CancellationToken cancellationToken)

@@ -10,7 +10,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-public class UpdateUserPasswordHandler(IUnitOfWork unitOfWork) :
+public class UpdateUserPasswordHandler(IRepositoryManager unitOfWork) :
     IRequestHandler<UpdateUserPasswordCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateUserPasswordCommand request, CancellationToken cancellationToken)

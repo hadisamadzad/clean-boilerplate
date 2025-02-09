@@ -7,7 +7,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-public class GetUserByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserByIdQuery, OperationResult>
+public class GetUserByIdHandler(IRepositoryManager unitOfWork) : IRequestHandler<GetUserByIdQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {

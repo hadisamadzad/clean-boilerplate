@@ -8,7 +8,7 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class CheckUsernameHandler(IUnitOfWork unitOfWork) : IRequestHandler<CheckUsernameQuery, OperationResult>
+internal class CheckUsernameHandler(IRepositoryManager unitOfWork) : IRequestHandler<CheckUsernameQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(CheckUsernameQuery request, CancellationToken cancellationToken)
     {

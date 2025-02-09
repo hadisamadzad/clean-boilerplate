@@ -12,11 +12,11 @@ using Microsoft.Extensions.Options;
 namespace Identity.Application.UseCases.PasswordReset;
 
 // Handler
-internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
+internal class ResetPasswordHandler(IRepositoryManager unitOfWork,
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<ResetPasswordCommand, OperationResult>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IRepositoryManager _unitOfWork = unitOfWork;
     private readonly PasswordResetConfig _passwordResetConfig = passwordResetConfig.Value;
 
     public async Task<OperationResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)

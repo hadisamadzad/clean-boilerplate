@@ -2,7 +2,7 @@ namespace Identity.Application.Types.Configs;
 
 public class BrevoConfig
 {
-    public static string Key = "Brevo";
+    public const string Key = "Brevo";
 
     public string BaseAddress { get; set; }
     public string SendEmailUri { get; set; }

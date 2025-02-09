@@ -2,8 +2,8 @@ namespace Identity.Application.Helpers;
 
 public static class ExpirationTimeHelper
 {
-    public static DateTime GetExpirationTime(int lifetimeInDays)
-    {
-        return DateTime.UtcNow.AddDays(lifetimeInDays).Date.AddDays(1).AddMinutes(-1);
-    }
+    public static DateTime GetExpirationTime(int lifetimeInDays) => DateTime.UtcNow
+        .AddDays(lifetimeInDays)
+        .Date
+        .Add(new TimeSpan(23, 59, 59));
 }

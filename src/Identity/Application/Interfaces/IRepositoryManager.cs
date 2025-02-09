@@ -2,7 +2,7 @@
 
 namespace Identity.Application.Interfaces;
 
-public interface IUnitOfWork
+public interface IRepositoryManager
 {
     IUserRepository Users { get; }
 

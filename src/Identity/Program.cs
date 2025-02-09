@@ -50,7 +50,7 @@ builder.Services.AddControllers();
 builder.Services.AddConfiguredMediatR();
 
 builder.Services.AddConfiguredMongoDB(configs);
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
 //builder.Services.AddConfiguredRedisCache(configs);
 
