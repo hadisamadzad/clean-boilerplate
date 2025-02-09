@@ -8,7 +8,12 @@ namespace Identity.Application.Helpers;
 
 public static class JwtHelper
 {
-    public static SecurityTokenConfig Config;
+    private static AuthTokenConfig Config;
+
+    public static void Initialize(AuthTokenConfig config)
+    {
+        Config = config;
+    }
 
     public static string CreateJwtAccessToken(string userId, string email) =>
         CreateJwt(Config.AccessTokenSecretKey, Config.AccessTokenLifetime, userId, email);
@@ -28,7 +33,6 @@ public static class JwtHelper
         return payload.Claims.SingleOrDefault(x => x.Type == "unique_name")?.Value;
     }
 
-    // Private methods
     private static string CreateJwt(string key, TimeSpan lifetime, string userId, string email)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

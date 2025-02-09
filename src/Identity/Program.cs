@@ -45,7 +45,7 @@ builder.Services.AddCors(options => options
         .AllowAnyHeader()));
 
 // Add services to the container
-
+builder.Services.AddCustomConfigurations(configs);
 builder.Services.AddControllers();
 builder.Services.AddConfiguredMediatR();
 

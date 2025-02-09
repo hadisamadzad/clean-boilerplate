@@ -10,7 +10,8 @@ public static class UserHelper
 
     public static string CreateUserStamp() => Guid.NewGuid().ToString("N");
 
-    public static string GetFullName(this UserEntity user) => $"{user.FirstName} {user.LastName}";
+    public static string GetFullName(this UserEntity user) =>
+        $"{user.FirstName} {user.LastName}".Trim();
 
     public static void Activate(this UserEntity user)
     {

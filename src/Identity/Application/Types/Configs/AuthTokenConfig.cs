@@ -1,8 +1,8 @@
 ﻿namespace Identity.Application.Types.Configs;
 
-public record SecurityTokenConfig
+public record AuthTokenConfig
 {
-    public const string Key = "SecurityToken";
+    public const string Key = "AuthToken";
 
     public string Issuer { get; set; }
     public string Audience { get; set; }

@@ -5,10 +5,11 @@ namespace Identity.Core.ServiceRegistrations;
 
 public static class ConfigRegistration
 {
-    public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCustomConfigurations(this IServiceCollection services, IConfiguration configuration)
     {
         // Jwt helper static config
-        JwtHelper.Config = configuration.GetSection(SecurityTokenConfig.Key).Get<SecurityTokenConfig>();
+        var jwtConfig = configuration.GetSection(AuthTokenConfig.Key).Get<AuthTokenConfig>();
+        JwtHelper.Initialize(jwtConfig);
 
         // User helper static lockout config
         UserHelper.LockoutConfig = configuration.GetSection(LockoutConfig.Key).Get<LockoutConfig>();
