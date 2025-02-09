@@ -1,12 +1,15 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
+using Identity.Application.Specifications.Auth;
 using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
+// Handler
 public class UpdateUserPasswordHandler(IUnitOfWork unitOfWork) :
     IRequestHandler<UpdateUserPasswordCommand, OperationResult>
 {
@@ -32,5 +35,27 @@ public class UpdateUserPasswordHandler(IUnitOfWork unitOfWork) :
         _ = await unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
+    }
+}
+
+// Model
+public record UpdateUserPasswordCommand(
+    string AdminUserId,
+    string UserId,
+    string CurrentPassword,
+    string NewPassword) : IRequest<OperationResult>;
+
+// Model Validator
+public class UpdateUserPasswordValidator : AbstractValidator<UpdateUserPasswordCommand>
+{
+    public UpdateUserPasswordValidator()
+    {
+        RuleFor(x => x.CurrentPassword)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidPassword);
+
+        RuleFor(x => x.NewPassword)
+            .Must(x => new AcceptablePasswordStrengthSpecification().IsSatisfiedBy(x))
+            .WithState(_ => Errors.WeakPassword);
     }
 }

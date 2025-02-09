@@ -1,11 +1,14 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Interfaces;
+using Identity.Application.Types.Entities;
 using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
+// Handler
 internal class UpdateUserStateHandler(IUnitOfWork unitOfWork) :
     IRequestHandler<UpdateUserStateCommand, OperationResult>
 {
@@ -29,5 +32,28 @@ internal class UpdateUserStateHandler(IUnitOfWork unitOfWork) :
         _ = await unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
+    }
+}
+
+// Model
+public record UpdateUserStateCommand(
+    string AdminUserId,
+    string UserId,
+    UserState State) : IRequest<OperationResult>;
+
+// Model Validator
+public class UpdateUserStateValidator : AbstractValidator<UpdateUserStateCommand>
+{
+    public UpdateUserStateValidator()
+    {
+        // User id
+        RuleFor(x => x.UserId)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidId);
+
+        // Email
+        RuleFor(x => x.State)
+            .IsInEnum()
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

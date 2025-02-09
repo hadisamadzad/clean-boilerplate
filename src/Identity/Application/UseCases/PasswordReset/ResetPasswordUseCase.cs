@@ -1,15 +1,17 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
+using Identity.Application.Specifications.Auth;
 using Identity.Application.Types.Configs;
-using Identity.Application.UseCases.Auth;
 using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Identity.Application.UseCases.PasswordReset;
 
+// Handler
 internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<ResetPasswordCommand, OperationResult>
@@ -44,5 +46,24 @@ internal class ResetPasswordHandler(IUnitOfWork unitOfWork,
         _ = await _unitOfWork.Users.UpdateAsync(user);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
+    }
+}
+
+// Model
+public record ResetPasswordCommand(string Token, string NewPassword)
+    : IRequest<OperationResult>;
+
+// Model Validator
+public class ResetPasswordValidator : AbstractValidator<ResetPasswordCommand>
+{
+    public ResetPasswordValidator()
+    {
+        RuleFor(x => x.Token)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidToken);
+
+        RuleFor(x => x.NewPassword)
+            .Must(x => new AcceptablePasswordStrengthSpecification().IsSatisfiedBy(x))
+            .WithState(_ => Errors.WeakPassword);
     }
 }

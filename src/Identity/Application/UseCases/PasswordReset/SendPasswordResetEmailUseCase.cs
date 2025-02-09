@@ -1,15 +1,16 @@
 ﻿using Common.Application.Helpers;
 using Common.Application.Infrastructure.Operations;
+using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Configs;
-using Identity.Application.UseCases.Auth;
 using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Identity.Application.UseCases.PasswordReset;
 
+// Handler
 internal class SendPasswordResetEmailHandler(
     IUnitOfWork unitOfWork,
     ITransactionalEmailService transactionalEmailService,
@@ -53,5 +54,19 @@ internal class SendPasswordResetEmailHandler(
             _passwordResetConfig.BrevoTemplateId, [email], @params);
 
         return new OperationResult(OperationStatus.Completed, value: user.Id);
+    }
+}
+
+// Model
+public record SendPasswordResetEmailCommand(string Email) : IRequest<OperationResult>;
+
+// Model Validator
+public class SendPasswordResetEmailValidator : AbstractValidator<SendPasswordResetEmailCommand>
+{
+    public SendPasswordResetEmailValidator()
+    {
+        RuleFor(x => x.Email)
+            .EmailAddress()
+            .WithState(_ => Errors.InvalidEmail);
     }
 }

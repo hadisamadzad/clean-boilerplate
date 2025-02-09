@@ -6,6 +6,7 @@ using MediatR;
 
 namespace Identity.Application.UseCases.PasswordReset;
 
+// Handler
 internal class GetPasswordResetInfoHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<GetPasswordResetInfoQuery, OperationResult>
 {
@@ -31,3 +32,6 @@ internal class GetPasswordResetInfoHandler(IUnitOfWork unitOfWork)
         return new OperationResult(OperationStatus.Completed, value: user.Email);
     }
 }
+
+// Model
+public record GetPasswordResetInfoQuery(string Token) : IRequest<OperationResult>;
