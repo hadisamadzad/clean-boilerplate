@@ -18,18 +18,17 @@ public class UpdateUserPasswordHandler(IRepositoryManager unitOfWork) :
         // Validation
         var validation = new UpdateUserPasswordValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         if (PasswordHelper.CheckPasswordHash(user.PasswordHash, request.CurrentPassword))
             user.PasswordHash = PasswordHelper.Hash(request.NewPassword);
         else
-            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidCredentials);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidCredentials);
 
         user.UpdatedAt = DateTime.UtcNow;
         _ = await unitOfWork.Users.UpdateAsync(user);

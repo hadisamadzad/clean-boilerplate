@@ -17,13 +17,12 @@ internal class UpdateUserStateHandler(IRepositoryManager unitOfWork) :
         // Validation
         var validation = new UpdateUserStateValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Update
         user.State = request.State;

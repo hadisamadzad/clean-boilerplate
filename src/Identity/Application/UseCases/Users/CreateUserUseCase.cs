@@ -4,7 +4,6 @@ using FluentValidation;
 using Identity.Application.Constants.Errors;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
-using Identity.Application.Specifications;
 using Identity.Application.Types.Entities;
 using MediatR;
 
@@ -18,24 +17,22 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         // Validation
         var validation = new CreateUserValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check if user is admin
         var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
         if (requesterUser is null)
-            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Check role
         if (!requesterUser.HasAdminRole())
-            return new OperationResult(OperationStatus.Unauthorized,
-                Value: Errors.InsufficientAccessLevel);
+            return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InsufficientAccessLevel);
 
         // Checking duplicate email
         var isDuplicate = await unitOfWork.Users
             .ExistsAsync(x => x.Email.ToLower() == request.Email.ToLower());
         if (isDuplicate)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.DuplicateUsername);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateUsername);
 
         // Factory
         var entity = new UserEntity

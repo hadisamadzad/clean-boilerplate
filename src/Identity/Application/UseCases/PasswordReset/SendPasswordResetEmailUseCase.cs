@@ -24,17 +24,15 @@ internal class SendPasswordResetEmailHandler(
         // Validation
         var validation = new SendPasswordResetEmailValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         if (user.IsLockedOutOrNotActive())
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.LockedUser);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.LockedUser);
 
         var expirationTime = ExpirationTimeHelper
             .GetExpirationTime(_passwordResetConfig.LinkLifetimeInDays);

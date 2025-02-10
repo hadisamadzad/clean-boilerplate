@@ -20,14 +20,14 @@ internal class RegisterHandler(IRepositoryManager unitOfWork)
         // Validation
         var validation = new RegisterValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check initial ownership
         // NOTE Registration is supposed to be done only once and for the first user. So if
         // there is any existing user, it means there is nothing to do with registration.
         var isAlreadyOwned = await unitOfWork.Users.AnyUsersAsync();
         if (isAlreadyOwned)
-            return new OperationResult(OperationStatus.Unprocessable, Errors.OwnershipAlreadyDone);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.OwnershipAlreadyDone);
 
         var user = new UserEntity
         {

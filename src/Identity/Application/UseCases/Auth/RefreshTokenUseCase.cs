@@ -13,17 +13,17 @@ internal class RefreshTokenHandler(IRepositoryManager unitOfWork) : IRequestHand
     public async Task<OperationResult> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
     {
         if (!JwtHelper.IsValidJwtRefreshToken(request.RefreshToken))
-            return new OperationResult(OperationStatus.Unauthorized, Errors.InvalidCredentials);
+            return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InvalidCredentials);
 
         var email = JwtHelper.GetEmail(request.RefreshToken);
 
         var user = await unitOfWork.Users.GetUserByEmailAsync(email);
         if (user is null)
-            return new OperationResult(OperationStatus.Unauthorized, Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InvalidId);
 
         // Lockout check
         if (user.IsLockedOutOrNotActive())
-            return new OperationResult(OperationStatus.Unauthorized, Errors.LockedUser);
+            return OperationResult.Failure(OperationStatus.Unauthorized, Errors.LockedUser);
 
         var result = new TokenResult
         {

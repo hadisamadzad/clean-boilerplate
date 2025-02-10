@@ -15,19 +15,16 @@ internal class GetPasswordResetInfoHandler(IRepositoryManager unitOfWork)
         var (succeeded, email) = PasswordResetTokenHelper.ReadPasswordResetToken(request.Token);
 
         if (!succeeded)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidToken);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidToken);
 
         var user = await unitOfWork.Users.GetUserByEmailAsync(email) ??
             throw new AggregateException($"Unable to read the valid password-reset token: {request.Token}");
 
         if (user.IsLockedOutOrNotActive())
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.LockedUser);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.LockedUser);
 
         if (!string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidToken);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidToken);
 
         return OperationResult.Success(user.Email);
     }

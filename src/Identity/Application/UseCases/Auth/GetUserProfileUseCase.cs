@@ -13,12 +13,12 @@ internal class GetUserProfileHandler(IRepositoryManager unitOfWork) : IRequestHa
     {
         // Validation
         if (string.IsNullOrWhiteSpace(request.RequestedBy))
-            return new OperationResult(OperationStatus.Invalid, Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Invalid, Errors.InvalidId);
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.RequestedBy);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Mapping
         var response = user.MapToUserModel();

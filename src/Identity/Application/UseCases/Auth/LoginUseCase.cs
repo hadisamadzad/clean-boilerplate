@@ -17,16 +17,16 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
         // Validation
         var validation = new LoginValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Lockout check
         if (user.IsLockedOutOrNotActive())
-            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidCredentials);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidCredentials);
 
         // Login check via password
         var loggedIn = PasswordHelper.CheckPasswordHash(user.PasswordHash, request.Password);
@@ -37,7 +37,7 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
             user.TryToLockout();
             _ = await unitOfWork.Users.UpdateAsync(user);
             await unitOfWork.CommitAsync();
-            return new OperationResult(OperationStatus.Unprocessable, Errors.InvalidCredentials);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidCredentials);
         }
 
         /* Here user is authenticated */

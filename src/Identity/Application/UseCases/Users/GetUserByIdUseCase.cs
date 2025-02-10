@@ -14,7 +14,7 @@ public class GetUserByIdHandler(IRepositoryManager unitOfWork) : IRequestHandler
         // Get
         var entity = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (entity is null)
-            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Mapping
         var model = entity.MapToUserModel();

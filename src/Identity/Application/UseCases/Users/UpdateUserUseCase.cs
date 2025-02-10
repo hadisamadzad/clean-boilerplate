@@ -15,18 +15,17 @@ internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         // Validation
         var validation = new UpdateUserValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check if user is admin
         var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
         if (requesterUser is null)
-            return new OperationResult(OperationStatus.Unprocessable, Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Get
         var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
         if (user is null)
-            return new OperationResult(OperationStatus.Unprocessable,
-                Value: Errors.InvalidId);
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Update
         user.FirstName = request.FirstName;
