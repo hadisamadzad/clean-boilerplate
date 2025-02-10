@@ -45,7 +45,7 @@ internal class ResetPasswordHandler(IRepositoryManager unitOfWork,
 
         _ = await _unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, Value: user.Id);
+        return OperationResult.Success(user.Id);
     }
 }
 

@@ -30,7 +30,7 @@ internal class RefreshTokenHandler(IRepositoryManager unitOfWork) : IRequestHand
             AccessToken = user.CreateJwtAccessToken(),
         };
 
-        return new OperationResult(OperationStatus.Completed, Value: result);
+        return OperationResult.Success(result);
     }
 }
 

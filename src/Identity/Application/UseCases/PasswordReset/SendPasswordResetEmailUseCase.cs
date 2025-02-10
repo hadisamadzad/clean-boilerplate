@@ -53,7 +53,7 @@ internal class SendPasswordResetEmailHandler(
         _ = await transactionalEmailService.SendEmailByTemplateIdAsync(
             _passwordResetConfig.BrevoTemplateId, [email], @params);
 
-        return new OperationResult(OperationStatus.Completed, Value: user.Id);
+        return OperationResult.Success(user.Id);
     }
 }
 

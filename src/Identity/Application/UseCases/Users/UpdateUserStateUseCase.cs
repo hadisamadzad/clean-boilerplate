@@ -31,7 +31,7 @@ internal class UpdateUserStateHandler(IRepositoryManager unitOfWork) :
 
         _ = await unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, Value: user.Id);
+        return OperationResult.Success(user.Id);
     }
 }
 

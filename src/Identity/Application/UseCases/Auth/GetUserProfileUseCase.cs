@@ -23,7 +23,7 @@ internal class GetUserProfileHandler(IRepositoryManager unitOfWork) : IRequestHa
         // Mapping
         var response = user.MapToUserModel();
 
-        return new OperationResult(OperationStatus.Completed, Value: response);
+        return OperationResult.Success(response);
     }
 }
 

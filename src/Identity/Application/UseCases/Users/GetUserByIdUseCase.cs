@@ -19,7 +19,7 @@ public class GetUserByIdHandler(IRepositoryManager unitOfWork) : IRequestHandler
         // Mapping
         var model = entity.MapToUserModel();
 
-        return new OperationResult(OperationStatus.Completed, Value: model);
+        return OperationResult.Success(model);
     }
 }
 

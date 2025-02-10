@@ -2,29 +2,17 @@ namespace Common.Utilities.OperationResult;
 
 public record OperationResult(OperationStatus Status, object Value)
 {
-    public readonly OperationStatus Status = Status;
-    public readonly object Value = Value;
+    public bool Succeeded => Status is OperationStatus.Completed or OperationStatus.Ignored;
 
-    public bool Succeeded => IsSucceeded(Status);
-
-    private static bool IsSucceeded(OperationStatus status) => status switch
-    {
-        _ when
-            status == OperationStatus.Completed ||
-            status == OperationStatus.Ignored => true,
-        _ when
-            status == OperationStatus.Invalid ||
-            status == OperationStatus.Unauthorized ||
-            status == OperationStatus.Unprocessable => false,
-        _ => false
-    };
+    public static OperationResult Success(object value) => new(OperationStatus.Completed, value);
+    public static OperationResult Failure(OperationStatus status, object value) => new(status, value);
 }
 
 public enum OperationStatus
 {
     Completed = 1,
-    Invalid,
     Ignored,
+    Invalid,
     Unauthorized,
     Unprocessable
 }

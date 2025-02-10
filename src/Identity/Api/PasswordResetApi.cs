@@ -19,7 +19,7 @@ public static class PasswordResetApi
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 
-        // Send password reset email
+        // Endpoint for sending password reset email
         group.MapPost(Route + "password-reset", async (
             IMediator mediator,
             [FromBody] SendPasswordResetEmailRequest request) =>
@@ -32,16 +32,14 @@ public static class PasswordResetApi
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     UserId = value
                 };
             });
 
-        // Get password reset info
+        // Endpoint for getting password reset info
         group.MapGet(Route + "password-reset", async (
             IMediator mediator,
             [FromQuery] string token) =>
@@ -54,16 +52,14 @@ public static class PasswordResetApi
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     Email = value
                 };
             });
 
-        // Reset password
+        // Endpoint for resetting user password
         group.MapPatch(Route + "password-reset", async (
             IMediator mediator,
             [FromBody] ResetPasswordRequest request) =>
@@ -76,9 +72,7 @@ public static class PasswordResetApi
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     UserId = value

@@ -56,7 +56,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
 
         await unitOfWork.Users.InsertAsync(entity);
 
-        return new OperationResult(OperationStatus.Completed, Value: entity);
+        return OperationResult.Success(entity);
     }
 }
 

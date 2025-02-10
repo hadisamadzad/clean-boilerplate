@@ -53,7 +53,7 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
             RefreshToken = user.CreateJwtRefreshToken()
         };
 
-        return new OperationResult(OperationStatus.Completed, Value: result);
+        return OperationResult.Success(result);
     }
 }
 

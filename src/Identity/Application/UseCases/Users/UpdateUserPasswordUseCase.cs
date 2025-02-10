@@ -34,7 +34,7 @@ public class UpdateUserPasswordHandler(IRepositoryManager unitOfWork) :
         user.UpdatedAt = DateTime.UtcNow;
         _ = await unitOfWork.Users.UpdateAsync(user);
 
-        return new OperationResult(OperationStatus.Completed, Value: user.Id);
+        return OperationResult.Success(user.Id);
     }
 }
 

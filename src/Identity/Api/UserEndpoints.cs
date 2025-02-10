@@ -22,7 +22,6 @@ public static class UserEndpoints
     public record UpdateUserStateRequest(UserState State);
     public record UpdateUserPasswordRequest(string CurrentPassword, string NewPassword);
 
-
     // Endpoints
     public static void MapUserEndpoints(this WebApplication app)
     {
@@ -49,9 +48,7 @@ public static class UserEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not UserEntity value)
-                    return operation.Value;
-
+                var value = (UserEntity)operation.Value;
                 return new
                 {
                     UserId = value.Id,
@@ -73,9 +70,7 @@ public static class UserEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not UserModel value)
-                    return operation.Value;
-
+                var value = (UserModel)operation.Value;
                 return new
                 {
                     UserId = value.UserId,
@@ -111,9 +106,7 @@ public static class UserEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     UserId = value
@@ -140,9 +133,7 @@ public static class UserEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     UserId = value
@@ -170,9 +161,7 @@ public static class UserEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not string value)
-                    return operation.Value;
-
+                var value = (string)operation.Value;
                 return new
                 {
                     UserId = value

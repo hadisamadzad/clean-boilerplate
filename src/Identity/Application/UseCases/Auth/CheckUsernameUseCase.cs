@@ -15,14 +15,14 @@ internal class CheckUsernameHandler(IRepositoryManager unitOfWork) : IRequestHan
         // Validation
         var validation = new CheckUsernameValidator().Validate(request);
         if (!validation.IsValid)
-            return new OperationResult(OperationStatus.Invalid, validation.GetFirstError());
+            return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
         var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
 
         var isAvailable = user is null;
 
-        return new OperationResult(OperationStatus.Completed, Value: isAvailable);
+        return OperationResult.Success(isAvailable);
     }
 }
 

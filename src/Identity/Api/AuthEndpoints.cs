@@ -22,7 +22,7 @@ public static class AuthEndpoints
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 
-        // Ownership check endpoint
+        // Endpoint for checking if ownership is done
         group.MapGet("ownership-check", async (
             IMediator mediator) =>
             {
@@ -34,9 +34,7 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not bool value)
-                    return operation.Value;
-
+                var value = (bool)operation.Value;
                 return new
                 {
                     IsOwnershipDone = value
@@ -56,9 +54,7 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not UserModel value)
-                    return operation.Value;
-
+                var value = (UserModel)operation.Value;
                 return new
                 {
                     UserId = value.UserId,
@@ -89,9 +85,7 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not RegisterResult value)
-                    return operation.Value;
-
+                var value = (RegisterResult)operation.Value;
                 return new
                 {
                     Id = value.UserId
@@ -115,9 +109,7 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not LoginResult value)
-                    return operation.Value;
-
+                var value = (LoginResult)operation.Value;
                 return new
                 {
                     value.Email,
@@ -140,16 +132,14 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not bool value)
-                    return operation.Value;
-
+                var value = (bool)operation.Value;
                 return new
                 {
                     IsAvailable = value
                 };
             });
 
-        // Get access token by refresh token endpoint
+        // Endpoint for getting access token by refresh token
         group.MapGet("access-token", async (
             IMediator mediator,
             [FromHeader] string refreshToken) =>
@@ -162,9 +152,7 @@ public static class AuthEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                if (operation.Value is not TokenResult value)
-                    return operation.Value;
-
+                var value = (TokenResult)operation.Value;
                 return new
                 {
                     NewAccessToken = value.AccessToken

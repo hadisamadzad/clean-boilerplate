@@ -50,7 +50,7 @@ internal class RegisterHandler(IRepositoryManager unitOfWork)
             Email = user.Email
         };
 
-        return new OperationResult(OperationStatus.Completed, Value: result);
+        return OperationResult.Success(result);
     }
 }
 

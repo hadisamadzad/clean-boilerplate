@@ -10,10 +10,9 @@ internal class GetOwnershipStatusHandler(IRepositoryManager unitOfWork)
 {
     public async Task<OperationResult> Handle(GetOwnershipStatusQuery request, CancellationToken cancellationToken)
     {
-        // Check initial registration
         var isAlreadyOwned = await unitOfWork.Users.AnyUsersAsync();
 
-        return new OperationResult(OperationStatus.Completed, Value: isAlreadyOwned);
+        return OperationResult.Success(isAlreadyOwned);
     }
 }
 

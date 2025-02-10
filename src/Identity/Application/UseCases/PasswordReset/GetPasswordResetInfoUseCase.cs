@@ -29,7 +29,7 @@ internal class GetPasswordResetInfoHandler(IRepositoryManager unitOfWork)
             return new OperationResult(OperationStatus.Unprocessable,
                 Value: Errors.InvalidToken);
 
-        return new OperationResult(OperationStatus.Completed, Value: user.Email);
+        return OperationResult.Success(user.Email);
     }
 }
 
