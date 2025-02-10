@@ -5,6 +5,7 @@ public record OperationResult(OperationStatus Status, object Value)
     public bool Succeeded => Status is OperationStatus.Completed or OperationStatus.Ignored;
 
     public static OperationResult Success(object value) => new(OperationStatus.Completed, value);
+    public static OperationResult Success(OperationStatus status, object value) => new(status, value);
     public static OperationResult Failure(OperationStatus status, object value) => new(status, value);
 }
 
