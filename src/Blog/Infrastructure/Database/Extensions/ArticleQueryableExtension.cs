@@ -14,7 +14,7 @@ public static class ArticleQueryableExtension
 
         // Filter by statuses
         if (filter.States?.Count == 0)
-            query = query.Where(x => filter.States.Contains(x.State));
+            query = query.Where(x => filter.States.Contains(x.Status));
 
         return query;
     }

@@ -2,6 +2,7 @@
 
 public enum ArticleState
 {
-    Active = 1,
-    Draft,
+    Draft = 1,
+    Published,
+    Archived
 }

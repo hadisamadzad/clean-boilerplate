@@ -22,8 +22,19 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
         var entity = new ArticleEntity
         {
             Id = UidHelper.GenerateNewId("article"),
+            AuthorId = request.AuthorId,
+
             Title = request.Title,
-            State = ArticleState.Active,
+            Subtitle = request.Subtitle,
+            Summary = request.Summary,
+            Content = request.Content,
+            Slug = request.Slug,
+            ThumbnailUrl = request.ThumbnailUrl,
+            CoverImageUrl = request.CoverImageUrl,
+
+            TimeToReadInMinute = 6,
+
+            Status = ArticleState.Draft,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -35,11 +46,17 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
 }
 
 // Model
-public record CreateArticleCommand(
-    string Title) : IRequest<OperationResult>
+public record CreateArticleCommand : IRequest<OperationResult>
 {
-    public string FirstName { get; init; }
-    public string LastName { get; init; }
+    public required string AuthorId { get; init; }
+
+    public string Title { get; init; } = string.Empty;
+    public string Subtitle { get; set; } = string.Empty;
+    public string Summary { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public string ThumbnailUrl { get; set; } = string.Empty;
+    public string CoverImageUrl { get; set; } = string.Empty;
 }
 
 // Model Validator
@@ -47,9 +64,45 @@ public class CreateArticleValidator : AbstractValidator<CreateArticleCommand>
 {
     public CreateArticleValidator()
     {
-        // Id
-        RuleFor(x => x.Title)
-            .MaximumLength(200)
+        // AuthorId
+        RuleFor(x => x.AuthorId)
+            .NotEmpty()
             .WithState(_ => Errors.InvalidId);
+
+        // Title
+        RuleFor(x => x.Title)
+            .NotEmpty()
+            .MaximumLength(200)
+            .WithState(_ => Errors.InvalidArticleTitle);
+
+        // Subtitle
+        RuleFor(x => x.Subtitle)
+            .MaximumLength(300)
+            .When(x => !string.IsNullOrEmpty(x.Subtitle))
+            .WithState(_ => Errors.InvalidArticleTitle);
+
+        // Summary
+        RuleFor(x => x.Summary)
+            .MaximumLength(500)
+            .When(x => !string.IsNullOrEmpty(x.Summary))
+            .WithState(_ => Errors.InvalidArticleSummary);
+
+        // Slug
+        RuleFor(x => x.Slug)
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrEmpty(x.Slug))
+            .WithState(_ => Errors.InvalidArticleSlug);
+
+        // ThumbnailUrl
+        RuleFor(x => x.ThumbnailUrl)
+            .MaximumLength(300)
+            .When(x => !string.IsNullOrEmpty(x.ThumbnailUrl))
+            .WithState(_ => Errors.InvalidArticleThumbnailUrl);
+
+        // CoverImageUrl
+        RuleFor(x => x.CoverImageUrl)
+            .MaximumLength(300)
+            .When(x => !string.IsNullOrEmpty(x.CoverImageUrl))
+            .WithState(_ => Errors.InvalidArticleCoverImageUrl);
     }
 }

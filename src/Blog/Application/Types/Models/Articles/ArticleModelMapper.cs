@@ -6,15 +6,27 @@ public static class ArticleModelMapper
 {
     public static ArticleModel MapToModel(this ArticleEntity entity)
     {
-        if (entity is null)
-            return null;
-
         return new ArticleModel
         {
-            ArticleId = entity.Id,
-            State = entity.State,
+            Id = entity.Id,
+            AuthorId = entity.AuthorId,
+
+            Title = entity.Title,
+            Subtitle = entity.Subtitle,
+            Summary = entity.Summary,
+            Content = entity.Content,
+            Slug = entity.Slug,
+            ThumbnailUrl = entity.ThumbnailUrl,
+            CoverImageUrl = entity.CoverImageUrl,
+
+            TimeToReadInMinute = entity.TimeToReadInMinute,
+            Likes = entity.Likes,
+
+            Status = entity.Status,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt,
+            PublishedAt = entity.PublishedAt,
+            ArchivedAt = entity.ArchivedAt,
         };
     }
 

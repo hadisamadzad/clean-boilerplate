@@ -13,7 +13,13 @@ public static class ArticleEndpoints
 
     // Models
     public record CreateArticleRequest(
-        string Title);
+        string Title,
+        string? Subtitle,
+        string? Summary,
+        string? Content,
+        string? Slug,
+        string? ThumbnailUrl,
+        string? CoverImageUrl);
 
     // Endpoints
     public static void MapArticleEndpoints(this WebApplication app)
@@ -26,10 +32,16 @@ public static class ArticleEndpoints
             [FromHeader] string requestedBy,
             [FromBody] CreateArticleRequest request) =>
             {
-                return await mediator.Send(new CreateArticleCommand(
-                    //AdminUserId: requestedBy,
-                    Title: request.Title)
+                return await mediator.Send(new CreateArticleCommand
                 {
+                    AuthorId = requestedBy,
+                    Title = request.Title,
+                    Subtitle = request.Subtitle ?? string.Empty,
+                    Summary = request.Summary ?? string.Empty,
+                    Content = request.Content ?? string.Empty,
+                    Slug = request.Slug ?? string.Empty,
+                    ThumbnailUrl = request.ThumbnailUrl ?? string.Empty,
+                    CoverImageUrl = request.CoverImageUrl ?? string.Empty,
                 });
             })
             .AddEndpointFilter(async (context, next) =>

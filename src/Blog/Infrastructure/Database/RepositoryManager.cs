@@ -7,7 +7,8 @@ namespace Blog.Infrastructure.Database;
 
 public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManager
 {
-    public IArticleRepository Articles { get; } = new ArticleRepository(mongoDatabase, "articles");
+    public IArticleRepository Articles { get; } =
+        new ArticleRepository(mongoDatabase, "blog.articles");
 
     public async Task<bool> CommitAsync()
     {

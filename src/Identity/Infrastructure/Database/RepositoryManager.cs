@@ -7,8 +7,8 @@ namespace Identity.Infrastructure.Database;
 
 public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManager
 {
-    public IUserRepository Users { get; }
-        = new UserRepository(mongoDatabase, "identity.users");
+    public IUserRepository Users { get; } =
+        new UserRepository(mongoDatabase, "identity.users");
 
     public async Task<bool> CommitAsync()
     {
