@@ -3,17 +3,12 @@ using Blog.Api;
 using Blog.Application.Interfaces;
 using Blog.Core.Bootstrap;
 using Blog.Infrastructure.Database;
+using Common.Helpers;
 using Common.Persistence.MongoDB;
 using Serilog;
 
-// Attain environment name
-var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-
-// Build configs reading from appsettings.json
-var configs = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false)
-    .AddJsonFile($"appsettings.{env}.json", optional: false)
-    .Build();
+var env = BootstrapHelper.GetEnvironmentName("Local");
+var configs = BootstrapHelper.GetConfigFromAppsettingsJson(env);
 
 // Logger
 Log.Logger = new LoggerConfiguration()
@@ -57,13 +52,17 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddHealthChecks();
 builder.Services.AddConfiguredSwagger();
 
-WebApplication app = null;
+WebApplication app = default!;
 try
 {
     app = builder.Build();
-    Log.Information("Application started ...");
+    Log.Information($"Application started on: {configs["urls"]} ({env})");
 }
-catch (Exception ex) { Log.Fatal(ex, "Application failed to build."); }
+catch (Exception ex)
+{
+    Log.Fatal(ex, $"Application failed to build.");
+}
+if (app is null) return;
 
 // Add middleware
 app.UseCors("general");
