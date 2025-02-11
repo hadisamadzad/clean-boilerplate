@@ -1,7 +1,11 @@
 using System.Net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
-namespace Identity.Core.Bootstrap;
+namespace Common.Extensions;
 
 internal static class ExceptionHandlerExtensions
 {
