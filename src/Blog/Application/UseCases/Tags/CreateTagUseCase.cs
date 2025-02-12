@@ -1,4 +1,5 @@
 ﻿using Blog.Application.Constants.Errors;
+using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
 using Common.Helpers;
@@ -19,11 +20,14 @@ internal class CreateTagHandler(IRepositoryManager unitOfWork) :
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
+        var slug = string.IsNullOrWhiteSpace(request.Slug) ?
+            SlugHelper.GenerateSlug(request.Name) : request.Slug;
+
         var entity = new TagEntity
         {
             Id = UidHelper.GenerateNewId("tag"),
-            Name = request.Name,
-            Slug = request.Slug,
+            Name = request.Name.ToLower(),
+            Slug = slug,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

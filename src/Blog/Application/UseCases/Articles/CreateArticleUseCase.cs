@@ -1,4 +1,5 @@
 ﻿using Blog.Application.Constants.Errors;
+using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
 using Common.Helpers;
@@ -18,7 +19,9 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
-        // Factory
+        var slug = string.IsNullOrWhiteSpace(request.Slug) ?
+            SlugHelper.GenerateSlug(request.Title) : request.Slug;
+
         var entity = new ArticleEntity
         {
             Id = UidHelper.GenerateNewId("article"),
@@ -28,7 +31,7 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
             Subtitle = request.Subtitle,
             Summary = request.Summary,
             Content = request.Content,
-            Slug = request.Slug,
+            Slug = slug,
             ThumbnailUrl = request.ThumbnailUrl,
             CoverImageUrl = request.CoverImageUrl,
 
@@ -49,7 +52,6 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
 public record CreateArticleCommand : IRequest<OperationResult>
 {
     public required string AuthorId { get; init; }
-
     public string Title { get; init; } = string.Empty;
     public string Subtitle { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
