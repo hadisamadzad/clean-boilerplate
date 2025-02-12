@@ -12,4 +12,9 @@ public class TagRepository(IMongoDatabase database, string collectionName) :
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
+
+    public async Task<TagEntity> GetTagBySlugAsync(string slug)
+    {
+        return await _collection.Find(x => x.Slug == slug).SingleOrDefaultAsync();
+    }
 }

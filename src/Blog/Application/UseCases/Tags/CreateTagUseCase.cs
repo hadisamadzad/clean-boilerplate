@@ -15,7 +15,7 @@ internal class CreateTagHandler(IRepositoryManager unitOfWork) :
 {
     public async Task<OperationResult> Handle(CreateTagCommand request, CancellationToken cancel)
     {
-        // Validation
+        // Validate
         var validation = new CreateTagValidator().Validate(request);
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
@@ -23,10 +23,15 @@ internal class CreateTagHandler(IRepositoryManager unitOfWork) :
         var slug = string.IsNullOrWhiteSpace(request.Slug) ?
             SlugHelper.GenerateSlug(request.Name) : request.Slug;
 
+        // Check duplicate
+        var existingSlug = await unitOfWork.Tags.GetTagBySlugAsync(slug);
+        if (existingSlug is not null)
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateTag);
+
         var entity = new TagEntity
         {
             Id = UidHelper.GenerateNewId("tag"),
-            Name = request.Name.ToLower(),
+            Name = request.Name,
             Slug = slug,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow

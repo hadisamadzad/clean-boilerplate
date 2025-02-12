@@ -4,23 +4,24 @@ namespace Blog.Application.Types.Models.Articles;
 
 public record ArticleModel
 {
-    public string Id { get; set; } = string.Empty;
-    public string AuthorId { get; set; } = string.Empty;
+    public string Id { get; init; } = string.Empty;
+    public string AuthorId { get; init; } = string.Empty;
 
-    public string Title { get; set; } = string.Empty;
-    public string Subtitle { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
-    public string ThumbnailUrl { get; set; } = string.Empty;
-    public string CoverImageUrl { get; set; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
+    public string Subtitle { get; init; } = string.Empty;
+    public string Summary { get; init; } = string.Empty;
+    public string Content { get; init; } = string.Empty;
+    public string Slug { get; init; } = string.Empty;
+    public string ThumbnailUrl { get; init; } = string.Empty;
+    public string CoverImageUrl { get; init; } = string.Empty;
 
-    public int TimeToReadInMinute { get; set; }
-    public int Likes { get; set; }
+    public int TimeToReadInMinute { get; init; }
+    public int Likes { get; init; }
+    public ICollection<string> TagIds { get; init; } = [];
 
-    public ArticleState Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public DateTime? PublishedAt { get; set; }
-    public DateTime? ArchivedAt { get; set; }
+    public ArticleState Status { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
+    public DateTime? PublishedAt { get; init; }
+    public DateTime? ArchivedAt { get; init; }
 }

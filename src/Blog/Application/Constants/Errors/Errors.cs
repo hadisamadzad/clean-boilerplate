@@ -35,5 +35,6 @@ public static class Errors
     public static readonly ErrorModel InvalidTagSlug =
         new("BLTG-102", "Tag Error", "Invalid tag slug.");
 
-
+    public static readonly ErrorModel DuplicateTag =
+        new("BLTG-103", "Tag Error", "Duplicate tag.");
 }

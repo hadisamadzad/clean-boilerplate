@@ -14,7 +14,7 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
 {
     public async Task<OperationResult> Handle(CreateArticleCommand request, CancellationToken cancellationToken)
     {
-        // Validation
+        // Validate
         var validation = new CreateArticleValidator().Validate(request);
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
@@ -36,6 +36,7 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
             CoverImageUrl = request.CoverImageUrl,
 
             TimeToReadInMinute = 6,
+            TagIds = [.. request.TagIds],
 
             Status = ArticleState.Draft,
             CreatedAt = DateTime.UtcNow,
@@ -59,6 +60,7 @@ public record CreateArticleCommand : IRequest<OperationResult>
     public string Slug { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
     public string CoverImageUrl { get; set; } = string.Empty;
+    public ICollection<string> TagIds { get; set; } = [];
 }
 
 // Model Validator
@@ -106,5 +108,10 @@ public class CreateArticleValidator : AbstractValidator<CreateArticleCommand>
             .MaximumLength(300)
             .When(x => !string.IsNullOrEmpty(x.CoverImageUrl))
             .WithState(_ => Errors.InvalidArticleCoverImageUrl);
+
+        // TagIds
+        RuleForEach(x => x.TagIds)
+            .NotEmpty()
+            .WithState(_ => Errors.InvalidId);
     }
 }

@@ -21,6 +21,7 @@ public static class ArticleModelMapper
 
             TimeToReadInMinute = entity.TimeToReadInMinute,
             Likes = entity.Likes,
+            TagIds = entity.TagIds,
 
             Status = entity.Status,
             CreatedAt = entity.CreatedAt,

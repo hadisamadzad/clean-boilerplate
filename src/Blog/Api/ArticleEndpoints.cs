@@ -19,7 +19,8 @@ public static class ArticleEndpoints
         string? Content,
         string? Slug,
         string? ThumbnailUrl,
-        string? CoverImageUrl);
+        string? CoverImageUrl,
+        ICollection<string> TagIds);
 
     // Endpoints
     public static void MapArticleEndpoints(this WebApplication app)
@@ -42,6 +43,7 @@ public static class ArticleEndpoints
                     Slug = request.Slug ?? string.Empty,
                     ThumbnailUrl = request.ThumbnailUrl ?? string.Empty,
                     CoverImageUrl = request.CoverImageUrl ?? string.Empty,
+                    TagIds = request.TagIds
                 });
             })
             .AddEndpointFilter(async (context, next) =>
