@@ -19,7 +19,7 @@ public static class TagEndpoints
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 
-        // Endpoint for creating a article
+        // Endpoint for creating a tag
         group.MapPost("", async (
             IMediator mediator,
             [FromHeader] string requestedBy,

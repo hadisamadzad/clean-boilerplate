@@ -1,4 +1,5 @@
 using Blog.Application.Types.Entities;
+using Blog.Application.Types.Models.Articles;
 using Blog.Application.UseCases.Articles;
 using Common.Utilities.OperationResult;
 using MediatR;
@@ -27,7 +28,7 @@ public static class ArticleEndpoints
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 
-        // Endpoint for creating a article
+        // Endpoint for creating an article
         group.MapPost("", async (
             IMediator mediator,
             [FromHeader] string requestedBy,
@@ -56,6 +57,42 @@ public static class ArticleEndpoints
                 return new
                 {
                     ArticleId = value.Id,
+                };
+            });
+
+        // Endpoint for getting an article
+        group.MapGet("{articleId}", async (
+            IMediator mediator,
+            [FromRoute] string articleId) =>
+            {
+                return await mediator.Send(new GetArticleByIdQuery(articleId));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                var value = (ArticleModel)operation.Value;
+                return new
+                {
+                    ArticleId = value.Id,
+                    AuthorId = value.AuthorId,
+                    Title = value.Title,
+                    Subtitle = value.Subtitle,
+                    Summary = value.Summary,
+                    Content = value.Content,
+                    Slug = value.Slug,
+                    ThumbnailUrl = value.ThumbnailUrl,
+                    CoverImageUrl = value.CoverImageUrl,
+                    TimeToReadInMinute = value.TimeToReadInMinute,
+                    Likes = value.Likes,
+                    TagIds = value.TagIds,
+                    Status = value.Status,
+                    CreatedAt = value.CreatedAt,
+                    UpdatedAt = value.UpdatedAt,
+                    PublishedAt = value.PublishedAt,
+                    ArchivedAt = value.ArchivedAt
                 };
             });
     }

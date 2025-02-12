@@ -12,7 +12,7 @@ namespace Blog.Application.UseCases.Articles;
 // Handler
 internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHandler<CreateArticleCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(CreateArticleCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CreateArticleCommand request, CancellationToken cancel)
     {
         // Validate
         var validation = new CreateArticleValidator().Validate(request);
@@ -21,6 +21,11 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
 
         var slug = string.IsNullOrWhiteSpace(request.Slug) ?
             SlugHelper.GenerateSlug(request.Title) : request.Slug;
+
+        // TODO Check duplicate
+        //var existingSlug = await unitOfWork.Tags.GetTagBySlugAsync(slug);
+        //if (existingSlug is not null)
+        //    return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateTag);
 
         var entity = new ArticleEntity
         {

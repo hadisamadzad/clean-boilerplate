@@ -28,6 +28,9 @@ public static class Errors
     public static readonly ErrorModel InvalidArticleCoverImageUrl =
         new("BLAR-105", "Article Error", "Invalid article cover image URL.");
 
+    public static readonly ErrorModel ArticleNotFound =
+        new("BLAR-106", "Article Error", "Article not found.");
+
     // Tag
     public static readonly ErrorModel InvalidTagName =
         new("BLTG-101", "Tag Error", "Invalid tag name.");
