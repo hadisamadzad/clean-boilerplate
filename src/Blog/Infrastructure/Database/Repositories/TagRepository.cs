@@ -1,0 +1,15 @@
+﻿using Blog.Application.Interfaces.Repositories;
+using Blog.Application.Types.Entities;
+using Common.Persistence.MongoDB;
+using MongoDB.Driver;
+
+namespace Blog.Infrastructure.Database.Repositories;
+
+public class TagRepository(IMongoDatabase database, string collectionName) :
+    MongoDbRepositoryBase<TagEntity>(database, collectionName), ITagRepository
+{
+    public async Task<TagEntity> GetTagByIdAsync(string id)
+    {
+        return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
+    }
+}

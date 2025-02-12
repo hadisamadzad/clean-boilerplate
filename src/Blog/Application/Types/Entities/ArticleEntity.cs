@@ -19,6 +19,7 @@ public class ArticleEntity : IDeletableEntity
     public int Likes { get; set; }
 
     public ArticleState Status { get; set; }
+
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public DateTime? PublishedAt { get; set; }

@@ -1,6 +1,8 @@
-﻿namespace Blog.Application.Types.Entities;
+﻿using Common.Interfaces;
 
-public class TagEntity
+namespace Blog.Application.Types.Entities;
+
+public class TagEntity : IEntity
 {
     public required string Id { get; set; }
     public required string Name { get; set; }

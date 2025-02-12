@@ -10,6 +10,9 @@ public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManage
     public IArticleRepository Articles { get; } =
         new ArticleRepository(mongoDatabase, "blog.articles");
 
+    public ITagRepository Tags { get; } =
+        new TagRepository(mongoDatabase, "blog.tags");
+
     public async Task<bool> CommitAsync()
     {
         var task = new Task<bool>(() => { return true; });

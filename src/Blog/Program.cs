@@ -70,6 +70,7 @@ app.MapHealthChecks("/health");
 
 // Add endpoints
 app.MapArticleEndpoints();
+app.MapTagEndpoints();
 
 if (!app.Environment.IsProduction())
     app.UseConfiguredSwagger();
