@@ -1,9 +1,9 @@
 namespace Common.Utilities.Pagination;
 
-public class PaginatedList<T>
+public record PaginatedList<T>
 {
-    public int Page { get; set; }
-    public int PageSize { get; set; }
-    public int TotalCount { get; set; }
-    public IList<T> Data { get; set; }
+    public int Page { get; init; }
+    public int PageSize { get; init; }
+    public int TotalCount { get; init; }
+    public IList<T> Results { get; init; }
 }
