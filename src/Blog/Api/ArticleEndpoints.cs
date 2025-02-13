@@ -2,6 +2,7 @@ using Blog.Application.Types.Entities;
 using Blog.Application.Types.Models.Articles;
 using Blog.Application.UseCases.Articles;
 using Common.Utilities.OperationResult;
+using Common.Utilities.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +12,6 @@ public static class ArticleEndpoints
 {
     const string Route = "api/articles/";
     const string Tag = "Articles";
-
-    // Models
-    public record CreateArticleRequest(
-        string Title,
-        string? Subtitle,
-        string? Summary,
-        string? Content,
-        string? Slug,
-        string? ThumbnailUrl,
-        string? CoverImageUrl,
-        ICollection<string> TagIds);
 
     // Endpoints
     public static void MapArticleEndpoints(this WebApplication app)
@@ -95,5 +85,78 @@ public static class ArticleEndpoints
                     ArchivedAt = value.ArchivedAt
                 };
             });
+
+        // Endpoint for getting a list of articles
+        group.MapGet("", async (
+            IMediator mediator,
+            [FromBody] GetArticlesByFilterRequest request) =>
+            {
+                return await mediator.Send(new GetArticlesByFilterQuery(new()
+                {
+                    Keyword = request.Keyword,
+                    TagIds = request.TagIds ?? [],
+                    Statuses = request.Statuses ?? [],
+                    SortBy = request.SortBy ?? ArticleSortBy.CreatedAtNewest,
+
+                    Page = request.Page,
+                    PageSize = request.PageSize
+                }));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                var value = (PaginatedList<ArticleModel>)operation.Value;
+                return new
+                {
+                    Page = value.Page,
+                    PageSize = value.PageSize,
+                    TotalCount = value.TotalCount,
+                    Results = value.Results.Select(x => new
+                    {
+                        ArticleId = x.Id,
+                        AuthorId = x.AuthorId,
+                        Title = x.Title,
+                        Subtitle = x.Subtitle,
+                        Summary = x.Summary,
+                        Content = x.Content,
+                        Slug = x.Slug,
+                        ThumbnailUrl = x.ThumbnailUrl,
+                        CoverImageUrl = x.CoverImageUrl,
+                        TimeToReadInMinute = x.TimeToReadInMinute,
+                        Likes = x.Likes,
+                        TagIds = x.TagIds,
+                        Status = x.Status,
+                        CreatedAt = x.CreatedAt,
+                        UpdatedAt = x.UpdatedAt,
+                        PublishedAt = x.PublishedAt,
+                        ArchivedAt = x.ArchivedAt
+                    })
+                };
+            });
     }
+}
+
+// Models
+public record CreateArticleRequest(
+    string Title,
+    string? Subtitle,
+    string? Summary,
+    string? Content,
+    string? Slug,
+    string? ThumbnailUrl,
+    string? CoverImageUrl,
+    ICollection<string> TagIds);
+
+public class GetArticlesByFilterRequest
+{
+    public string? Keyword { get; set; }
+    public List<string>? TagIds { get; set; }
+    public List<ArticleState>? Statuses { get; set; }
+    public ArticleSortBy? SortBy { get; set; }
+
+    public int Page { get; set; }
+    public int PageSize { get; set; }
 }
