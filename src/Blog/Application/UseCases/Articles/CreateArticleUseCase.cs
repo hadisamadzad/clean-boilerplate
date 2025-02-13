@@ -2,6 +2,7 @@
 using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
+using Blog.Application.Types.Models.Articles;
 using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
@@ -43,14 +44,14 @@ internal class CreateArticleHandler(IRepositoryManager unitOfWork) : IRequestHan
             TimeToReadInMinute = 6,
             TagIds = [.. request.TagIds],
 
-            Status = ArticleState.Draft,
+            Status = ArticleStatus.Draft,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
 
         await unitOfWork.Articles.InsertAsync(entity);
 
-        return OperationResult.Success(entity);
+        return OperationResult.Success(entity.MapToModel());
     }
 }
 

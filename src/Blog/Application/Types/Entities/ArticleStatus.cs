@@ -1,6 +1,6 @@
 ﻿namespace Blog.Application.Types.Entities;
 
-public enum ArticleState
+public enum ArticleStatus
 {
     Draft = 1,
     Published,

@@ -19,7 +19,7 @@ public static class ArticleEndpoints
         var group = app.MapGroup(Route).WithTags(Tag);
 
         // Endpoint for creating an article
-        group.MapPost("", async (
+        group.MapPost("/", async (
             IMediator mediator,
             [FromHeader] string requestedBy,
             [FromBody] CreateArticleRequest request) =>
@@ -43,7 +43,7 @@ public static class ArticleEndpoints
                 if (!operation!.Succeeded)
                     return operation.GetHttpResult();
 
-                var value = (ArticleEntity)operation.Value;
+                var value = (ArticleModel)operation.Value;
                 return new
                 {
                     ArticleId = value.Id,
@@ -51,7 +51,7 @@ public static class ArticleEndpoints
             });
 
         // Endpoint for getting an article
-        group.MapGet("{articleId}", async (
+        group.MapGet("{articleId}/", async (
             IMediator mediator,
             [FromRoute] string articleId) =>
             {
@@ -87,7 +87,7 @@ public static class ArticleEndpoints
             });
 
         // Endpoint for getting a list of articles
-        group.MapGet("", async (
+        group.MapGet("/", async (
             IMediator mediator,
             [FromBody] GetArticlesByFilterRequest request) =>
             {
@@ -136,6 +136,32 @@ public static class ArticleEndpoints
                     })
                 };
             });
+
+        // Endpoint for archiving an article
+        group.MapPatch("{articleId}/archive/", async (
+            IMediator mediator,
+            [FromRoute] string articleId,
+            [FromBody] ArchiveArticleRequest request) =>
+            {
+                return await mediator.Send(new UpdateArticleStatusCommand
+                (
+                    ArticleId: articleId,
+                    Status: request.Status
+                ));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                var value = (ArticleModel)operation.Value;
+                return new
+                {
+                    ArticleId = value.Id,
+                    Status = value.Status
+                };
+            });
     }
 }
 
@@ -154,9 +180,11 @@ public class GetArticlesByFilterRequest
 {
     public string? Keyword { get; set; }
     public List<string>? TagIds { get; set; }
-    public List<ArticleState>? Statuses { get; set; }
+    public List<ArticleStatus>? Statuses { get; set; }
     public ArticleSortBy? SortBy { get; set; }
 
     public int Page { get; set; }
     public int PageSize { get; set; }
 }
+
+public record ArchiveArticleRequest(ArticleStatus Status);

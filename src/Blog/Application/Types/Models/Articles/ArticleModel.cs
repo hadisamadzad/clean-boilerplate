@@ -19,7 +19,7 @@ public record ArticleModel
     public int Likes { get; init; }
     public ICollection<string> TagIds { get; init; } = [];
 
-    public ArticleState Status { get; init; }
+    public ArticleStatus Status { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
     public DateTime? PublishedAt { get; init; }
