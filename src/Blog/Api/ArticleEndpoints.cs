@@ -162,6 +162,26 @@ public static class ArticleEndpoints
                     Status = value.Status
                 };
             });
+
+        // Endpoint for deleting an article
+        group.MapDelete("{articleId}/", async (
+            IMediator mediator,
+            [FromRoute] string articleId) =>
+            {
+                return await mediator.Send(new DeleteArticleCommand(ArticleId: articleId));
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                var value = (ArticleModel)operation.Value;
+                return new
+                {
+                    ArticleId = value.Id
+                };
+            });
     }
 }
 

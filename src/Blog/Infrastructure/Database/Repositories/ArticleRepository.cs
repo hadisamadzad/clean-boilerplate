@@ -23,7 +23,8 @@ public class ArticleRepository(IMongoDatabase database, string collectionName) :
 
     public async Task<List<ArticleEntity>> GetArticlesByFilterAsync(ArticleFilter filter)
     {
-        var query = _collection.AsQueryable();
+        var query = _collection.AsQueryable()
+            .Where(x => !x.IsDeleted);
         query = query.ApplyFilter(filter);
         query = query.ApplySort(filter.SortBy);
 
@@ -35,7 +36,8 @@ public class ArticleRepository(IMongoDatabase database, string collectionName) :
 
     public async Task<int> CountArticlesByFilterAsync(ArticleFilter filter)
     {
-        var query = _collection.AsQueryable();
+        var query = _collection.AsQueryable()
+            .Where(x => !x.IsDeleted);
         query = query.ApplyFilter(filter);
         return await query.CountAsync();
     }
