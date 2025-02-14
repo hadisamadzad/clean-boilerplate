@@ -1,5 +1,5 @@
-# bloggy-backend
-Bloggy Headless Blog Boilerplate
+# Bloggy Clean Architecture
+Bloggy Headless Blog Clean Architecture Boilerplate
 
 # Installation
 1. Setup Databases
