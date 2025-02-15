@@ -8,12 +8,12 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class UpdateArticleStatusHandler(IRepositoryManager unitOfWork) :
+internal class UpdateArticleStatusHandler(IRepositoryManager repositoryManager) :
     IRequestHandler<UpdateArticleStatusCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateArticleStatusCommand request, CancellationToken cancel)
     {
-        var entity = await unitOfWork.Articles.GetArticleByIdAsync(request.ArticleId);
+        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
         if (entity is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.ArticleNotFound);
 
@@ -27,7 +27,7 @@ internal class UpdateArticleStatusHandler(IRepositoryManager unitOfWork) :
         entity.Status = request.Status;
         entity.UpdatedAt = DateTime.UtcNow;
 
-        _ = await unitOfWork.Articles.UpdateAsync(entity);
+        _ = await repositoryManager.Articles.UpdateAsync(entity);
 
         return OperationResult.Success(entity.MapToModel());
     }

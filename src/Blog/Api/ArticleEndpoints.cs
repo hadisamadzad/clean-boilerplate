@@ -137,6 +137,39 @@ public static class ArticleEndpoints
                 };
             });
 
+        // Endpoint for updating an article
+        group.MapPut("{articleId}/", async (
+            IMediator mediator,
+            [FromRoute] string articleId,
+            [FromBody] UpdateArticleRequest request) =>
+            {
+                return await mediator.Send(new UpdateArticleCommand
+                {
+                    ArticleId = articleId,
+                    Title = request.Title,
+                    Subtitle = request.Subtitle,
+                    Summary = request.Summary,
+                    Content = request.Content,
+                    Slug = request.Slug,
+                    ThumbnailUrl = request.ThumbnailUrl,
+                    CoverImageUrl = request.CoverImageUrl,
+                    TimeToRead = request.TimeToRead,
+                    TagIds = request.TagIds,
+                });
+            })
+            .AddEndpointFilter(async (context, next) =>
+            {
+                var operation = await next(context) as OperationResult;
+                if (!operation!.Succeeded)
+                    return operation.GetHttpResult();
+
+                var value = (ArticleModel)operation.Value;
+                return new
+                {
+                    ArticleId = value.Id
+                };
+            });
+
         // Endpoint for archiving an article
         group.MapPatch("{articleId}/archive/", async (
             IMediator mediator,
@@ -194,6 +227,17 @@ public record CreateArticleRequest(
     string? Slug,
     string? ThumbnailUrl,
     string? CoverImageUrl,
+    ICollection<string> TagIds);
+
+public record UpdateArticleRequest(
+    string Title,
+    string Subtitle,
+    string Summary,
+    string Content,
+    string Slug,
+    string ThumbnailUrl,
+    string CoverImageUrl,
+    int TimeToRead,
     ICollection<string> TagIds);
 
 public class GetArticlesByFilterRequest

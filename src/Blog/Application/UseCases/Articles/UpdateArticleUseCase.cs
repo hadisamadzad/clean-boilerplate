@@ -1,7 +1,6 @@
 ﻿using Blog.Application.Constants.Errors;
 using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
-using Blog.Application.Types.Entities;
 using Blog.Application.Types.Models.Articles;
 using Common.Helpers;
 using Common.Utilities.OperationResult;
@@ -11,55 +10,45 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class CreateArticleHandler(IRepositoryManager repositoryManager) :
-    IRequestHandler<CreateArticleCommand, OperationResult>
+internal class UpdateArticleHandler(IRepositoryManager repositoryManager) :
+    IRequestHandler<UpdateArticleCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(CreateArticleCommand request, CancellationToken cancel)
+    public async Task<OperationResult> Handle(UpdateArticleCommand request, CancellationToken cancel)
     {
         // Validate
-        var validation = new CreateArticleValidator().Validate(request);
+        var validation = new UpdateArticleValidator().Validate(request);
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
-
-        var slug = string.IsNullOrWhiteSpace(request.Slug) ?
-            SlugHelper.GenerateSlug(request.Title) : request.Slug;
 
         // Check duplicate
         var existingSlug = await repositoryManager.Articles.GetArticleBySlugAsync(request.Slug);
         if (existingSlug is not null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateArticle);
 
-        var entity = new ArticleEntity
-        {
-            Id = UidHelper.GenerateNewId("article"),
-            AuthorId = request.AuthorId,
+        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
 
-            Title = request.Title,
-            Subtitle = request.Subtitle,
-            Summary = request.Summary,
-            Content = request.Content,
-            Slug = slug,
-            ThumbnailUrl = request.ThumbnailUrl,
-            CoverImageUrl = request.CoverImageUrl,
+        entity.Title = request.Title;
+        entity.Subtitle = request.Subtitle;
+        entity.Summary = request.Summary;
+        entity.Content = request.Content;
+        entity.Slug = request.Slug.ToLower();
+        entity.ThumbnailUrl = request.ThumbnailUrl;
+        entity.CoverImageUrl = request.CoverImageUrl;
 
-            TimeToReadInMinute = 6,
-            TagIds = [.. request.TagIds],
+        entity.TimeToReadInMinute = request.TimeToRead;
+        entity.TagIds = [.. request.TagIds];
+        entity.UpdatedAt = DateTime.UtcNow;
 
-            Status = ArticleStatus.Draft,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        await repositoryManager.Articles.InsertAsync(entity);
+        _ = await repositoryManager.Articles.UpdateAsync(entity);
 
         return OperationResult.Success(entity.MapToModel());
     }
 }
 
 // Model
-public record CreateArticleCommand : IRequest<OperationResult>
+public record UpdateArticleCommand : IRequest<OperationResult>
 {
-    public required string AuthorId { get; init; }
+    public string ArticleId { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
     public string Subtitle { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
@@ -67,16 +56,17 @@ public record CreateArticleCommand : IRequest<OperationResult>
     public string Slug { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
     public string CoverImageUrl { get; set; } = string.Empty;
+    public int TimeToRead { get; set; }
     public ICollection<string> TagIds { get; set; } = [];
 }
 
 // Model Validator
-public class CreateArticleValidator : AbstractValidator<CreateArticleCommand>
+public class UpdateArticleValidator : AbstractValidator<UpdateArticleCommand>
 {
-    public CreateArticleValidator()
+    public UpdateArticleValidator()
     {
-        // AuthorId
-        RuleFor(x => x.AuthorId)
+        // ArticleId
+        RuleFor(x => x.ArticleId)
             .NotEmpty()
             .WithState(_ => Errors.InvalidId);
 
@@ -100,8 +90,9 @@ public class CreateArticleValidator : AbstractValidator<CreateArticleCommand>
 
         // Slug
         RuleFor(x => x.Slug)
+            .NotEmpty()
             .MaximumLength(100)
-            .When(x => !string.IsNullOrEmpty(x.Slug))
+            .Must(x => SlugHelper.IsValidSlug(x))
             .WithState(_ => Errors.InvalidSlug);
 
         // ThumbnailUrl

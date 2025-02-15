@@ -7,7 +7,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class GetArticlesByFilterHandler(IRepositoryManager unitOfWork) :
+internal class GetArticlesByFilterHandler(IRepositoryManager repositoryManager) :
     IRequestHandler<GetArticlesByFilterQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetArticlesByFilterQuery request, CancellationToken cancel)
@@ -16,8 +16,8 @@ internal class GetArticlesByFilterHandler(IRepositoryManager unitOfWork) :
             request = request with { Filter = new() { HasPagination = true } };
 
         // Retrieve the articles
-        var entities = await unitOfWork.Articles.GetArticlesByFilterAsync(request.Filter);
-        var totalCount = await unitOfWork.Articles.CountArticlesByFilterAsync(request.Filter);
+        var entities = await repositoryManager.Articles.GetArticlesByFilterAsync(request.Filter);
+        var totalCount = await repositoryManager.Articles.CountArticlesByFilterAsync(request.Filter);
         entities ??= [];
 
         var result = new PaginatedList<ArticleModel>

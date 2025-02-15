@@ -7,7 +7,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class GetArticleByIdHandler(IRepositoryManager unitOfWork) :
+internal class GetArticleByIdHandler(IRepositoryManager repositoryManager) :
     IRequestHandler<GetArticleByIdQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetArticleByIdQuery request, CancellationToken cancel)
@@ -17,7 +17,7 @@ internal class GetArticleByIdHandler(IRepositoryManager unitOfWork) :
             return OperationResult.Failure(OperationStatus.Invalid, Errors.InvalidId);
 
         // Retrieve the article
-        var entity = await unitOfWork.Articles.GetArticleByIdAsync(request.ArticleId);
+        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
         if (entity is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.ArticleNotFound);
 

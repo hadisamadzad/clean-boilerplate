@@ -61,6 +61,6 @@ public class CreateTagValidator : AbstractValidator<CreateTagCommand>
         RuleFor(x => x.Slug)
             .MaximumLength(30)
             .When(x => !string.IsNullOrEmpty(x.Slug))
-            .WithState(_ => Errors.InvalidTagSlug);
+            .WithState(_ => Errors.InvalidSlug);
     }
 }

@@ -24,6 +24,23 @@ public static class SlugHelper
         return text;
     }
 
+    public static bool IsValidSlug(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        // Check for special characters
+        foreach (char @char in text)
+            if (!char.IsLetterOrDigit(@char) && @char != '-')
+                return false;
+
+        // Check for consecutive hyphens, starting or ending hyphens
+        if (text.Contains("--") || text.StartsWith('-') || text.EndsWith('-'))
+            return false;
+
+        return true;
+    }
+
     private static string ReplaceSpecialCharacters(string input)
     {
         var replacements = new Dictionary<string, string>

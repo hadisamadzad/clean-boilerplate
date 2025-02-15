@@ -15,7 +15,10 @@ public class ArticleRepository(IMongoDatabase database, string collectionName) :
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
-
+    public async Task<ArticleEntity> GetArticleBySlugAsync(string slug)
+    {
+        return await _collection.Find(x => x.Slug == slug).SingleOrDefaultAsync();
+    }
     public async Task<List<ArticleEntity>> GetArticlesByIdsAsync(IEnumerable<string> ids)
     {
         return await _collection.Find(x => ids.Contains(x.Id)).ToListAsync();
