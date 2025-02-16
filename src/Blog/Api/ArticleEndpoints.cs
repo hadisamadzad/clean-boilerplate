@@ -1,6 +1,7 @@
 using Blog.Application.Types.Entities;
 using Blog.Application.Types.Models.Articles;
 using Blog.Application.UseCases.Articles;
+using Common.Interfaces;
 using Common.Utilities.OperationResult;
 using Common.Utilities.Pagination;
 using MediatR;

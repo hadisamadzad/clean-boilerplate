@@ -1,6 +1,8 @@
 using System.Reflection;
+using Common.Interfaces;
+using Microsoft.AspNetCore.Builder;
 
-namespace Blog.Api;
+namespace Common.Extensions;
 
 public static class EndpointWebApplicationExtensions
 {

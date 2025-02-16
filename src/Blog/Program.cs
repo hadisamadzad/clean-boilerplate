@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Blog.Api;
 using Blog.Application.Interfaces;
 using Blog.Core.Bootstrap;
 using Blog.Infrastructure.Database;
+using Common.Extensions;
 using Common.Helpers;
 using Common.Persistence.MongoDB;
 using Serilog;

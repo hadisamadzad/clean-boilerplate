@@ -1,4 +1,6 @@
-namespace Blog.Api;
+using Microsoft.AspNetCore.Builder;
+
+namespace Common.Interfaces;
 
 public interface IEndpoint
 {
