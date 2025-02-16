@@ -69,8 +69,7 @@ app.UseCors("general");
 app.MapHealthChecks("/health");
 
 // Add endpoints
-app.MapArticleEndpoints();
-app.MapTagEndpoints();
+app.MapEndpoints();
 
 if (!app.Environment.IsProduction())
     app.UseConfiguredSwagger();

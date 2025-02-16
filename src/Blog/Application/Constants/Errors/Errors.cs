@@ -11,6 +11,9 @@ public static class Errors
     public static readonly ErrorModel InvalidSlug =
         new("BLCO-101", "Error", "Invalid slug.");
 
+    public static readonly ErrorModel SettingsNotFound =
+        new("BLCO-102", "Error", "Settings not found.");
+
     // Article
     public static readonly ErrorModel InvalidArticleTitle =
         new("BLAR-100", "Article Error", "Invalid article title.");
@@ -39,4 +42,26 @@ public static class Errors
 
     public static readonly ErrorModel DuplicateTag =
         new("BLTG-102", "Tag Error", "Duplicate tag.");
+
+    // BlogSettings
+    public static readonly ErrorModel InvalidBlogTitle =
+        new("BLST-101", "Setting Error", "Invalid blog title.");
+
+    public static readonly ErrorModel InvalidBlogDescription =
+        new("BLST-102", "Setting Error", "Invalid blog description.");
+
+    public static readonly ErrorModel InvalidSeoTitle =
+        new("BLST-103", "Setting Error", "Invalid SEO title.");
+
+    public static readonly ErrorModel InvalidSeoDescription =
+        new("BLST-104", "Setting Error", "Invalid SEO description.");
+
+    public static readonly ErrorModel InvalidBlogUrl =
+        new("BLST-105", "Setting Error", "Invalid blog URL.");
+
+    public static readonly ErrorModel InvalidBlogLogoUrl =
+        new("BLST-106", "Setting Error", "Invalid blog logo URL.");
+
+    public static readonly ErrorModel InvalidSocialNetworkName =
+        new("BLST-107", "Setting Error", "Invalid social network name.");
 }

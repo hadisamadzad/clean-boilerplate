@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Api;
 
-public static class TagEndpoints
+public class TagEndpoints : IEndpoint
 {
     const string Route = "api/tags/";
     const string Tag = "Tags";
@@ -15,7 +15,7 @@ public static class TagEndpoints
     public record CreateTagRequest(string Name, string Slug);
 
     // Endpoints
-    public static void MapTagEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

@@ -13,6 +13,9 @@ public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManage
     public ITagRepository Tags { get; } =
         new TagRepository(mongoDatabase, "blog.tags");
 
+    public ISettingRepository Settings { get; } =
+        new SettingRepository(mongoDatabase, "blog.settings");
+
     public async Task<bool> CommitAsync()
     {
         var task = new Task<bool>(() => { return true; });

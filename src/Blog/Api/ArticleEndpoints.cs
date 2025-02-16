@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Api;
 
-public static class ArticleEndpoints
+public class ArticleEndpoints : IEndpoint
 {
     const string Route = "api/articles/";
     const string Tag = "Articles";
 
     // Endpoints
-    public static void MapArticleEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

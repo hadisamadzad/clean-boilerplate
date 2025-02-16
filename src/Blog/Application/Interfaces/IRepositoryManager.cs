@@ -6,6 +6,7 @@ public interface IRepositoryManager
 {
     IArticleRepository Articles { get; }
     ITagRepository Tags { get; }
+    ISettingRepository Settings { get; }
 
     Task<bool> CommitAsync();
 }

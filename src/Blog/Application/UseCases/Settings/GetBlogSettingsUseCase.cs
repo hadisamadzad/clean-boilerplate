@@ -1,0 +1,24 @@
+using Blog.Application.Constants.Errors;
+using Blog.Application.Interfaces;
+using Common.Utilities.OperationResult;
+using MediatR;
+
+namespace Blog.Application.UseCases.Settings;
+
+// Handler
+internal class GetBlogSettingsHandler(IRepositoryManager repositoryManager) :
+    IRequestHandler<GetBlogSettingsQuery, OperationResult>
+{
+    public async Task<OperationResult> Handle(GetBlogSettingsQuery request, CancellationToken cancel)
+    {
+        // Retrieve the article
+        var entity = await repositoryManager.Settings.GetBlogSettingAsync();
+        if (entity is null)
+            return OperationResult.Failure(OperationStatus.Unprocessable, Errors.SettingsNotFound);
+
+        return OperationResult.Success(entity);
+    }
+}
+
+// Model
+public record GetBlogSettingsQuery() : IRequest<OperationResult>;
