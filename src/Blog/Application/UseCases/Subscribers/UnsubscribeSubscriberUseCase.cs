@@ -18,7 +18,9 @@ internal class UnsubscribeSubscriberHandler(IRepositoryManager repository) :
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
-        var entity = await repository.Subscribers.GetByEmailAsync(request.Email.ToLower());
+        request = request with { Email = request.Email.ToLower() };
+
+        var entity = await repository.Subscribers.GetByEmailAsync(request.Email);
         if (entity is null)
             return OperationResult.Success(OperationStatus.Ignored);
 

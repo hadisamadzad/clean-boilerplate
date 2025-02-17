@@ -19,13 +19,15 @@ internal class CreateSubscriberHandler(IRepositoryManager repository) :
         if (!validation.IsValid)
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
+        request = request with { Email = request.Email.ToLower() };
+
         var entity = await repository.Subscribers.GetByEmailAsync(request.Email);
         var isNewSubscriber = entity is null;
 
         entity ??= new SubscriberEntity
         {
             Id = UidHelper.GenerateNewId("subscriber"),
-            Email = request.Email.ToLower(),
+            Email = request.Email,
             CreatedAt = DateTime.UtcNow,
         };
         entity.IsActive = true;
