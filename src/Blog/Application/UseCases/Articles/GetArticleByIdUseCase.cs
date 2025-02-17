@@ -1,4 +1,4 @@
-using Blog.Application.Constants.Errors;
+using Blog.Application.Constants;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Models.Articles;
 using Common.Utilities.OperationResult;
@@ -7,7 +7,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class GetArticleByIdHandler(IRepositoryManager repositoryManager) :
+internal class GetArticleByIdHandler(IRepositoryManager repository) :
     IRequestHandler<GetArticleByIdQuery, OperationResult>
 {
     public async Task<OperationResult> Handle(GetArticleByIdQuery request, CancellationToken cancel)
@@ -17,7 +17,7 @@ internal class GetArticleByIdHandler(IRepositoryManager repositoryManager) :
             return OperationResult.Failure(OperationStatus.Invalid, Errors.InvalidId);
 
         // Retrieve the article
-        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
+        var entity = await repository.Articles.GetByIdAsync(request.ArticleId);
         if (entity is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.ArticleNotFound);
 

@@ -6,9 +6,9 @@ namespace Blog.Application.Interfaces.Repositories;
 
 public interface IArticleRepository : IRepository<ArticleEntity>
 {
-    Task<ArticleEntity> GetArticleByIdAsync(string id);
-    Task<ArticleEntity> GetArticleBySlugAsync(string slug);
-    Task<List<ArticleEntity>> GetArticlesByIdsAsync(IEnumerable<string> ids);
-    Task<List<ArticleEntity>> GetArticlesByFilterAsync(ArticleFilter filter);
-    Task<int> CountArticlesByFilterAsync(ArticleFilter filter);
+    Task<ArticleEntity> GetByIdAsync(string id);
+    Task<ArticleEntity> GetBySlugAsync(string slug);
+    Task<List<ArticleEntity>> GetByIdsAsync(IEnumerable<string> ids);
+    Task<List<ArticleEntity>> GetByFilterAsync(ArticleFilter filter);
+    Task<int> CountByFilterAsync(ArticleFilter filter);
 }

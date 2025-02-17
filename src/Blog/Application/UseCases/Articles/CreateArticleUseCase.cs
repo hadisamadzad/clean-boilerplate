@@ -1,4 +1,4 @@
-﻿using Blog.Application.Constants.Errors;
+﻿using Blog.Application.Constants;
 using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
@@ -11,7 +11,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class CreateArticleHandler(IRepositoryManager repositoryManager) :
+internal class CreateArticleHandler(IRepositoryManager repository) :
     IRequestHandler<CreateArticleCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(CreateArticleCommand request, CancellationToken cancel)
@@ -25,7 +25,7 @@ internal class CreateArticleHandler(IRepositoryManager repositoryManager) :
             SlugHelper.GenerateSlug(request.Title) : request.Slug;
 
         // Check duplicate
-        var existingSlug = await repositoryManager.Articles.GetArticleBySlugAsync(request.Slug);
+        var existingSlug = await repository.Articles.GetBySlugAsync(request.Slug);
         if (existingSlug is not null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateArticle);
 
@@ -50,7 +50,7 @@ internal class CreateArticleHandler(IRepositoryManager repositoryManager) :
             UpdatedAt = DateTime.UtcNow
         };
 
-        await repositoryManager.Articles.InsertAsync(entity);
+        await repository.Articles.InsertAsync(entity);
 
         return OperationResult.Success(entity.MapToModel());
     }

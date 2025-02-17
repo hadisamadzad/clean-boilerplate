@@ -1,4 +1,4 @@
-﻿using Blog.Application.Constants.Errors;
+﻿using Blog.Application.Constants;
 using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
@@ -10,7 +10,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Tags;
 
 // Handler
-internal class CreateTagHandler(IRepositoryManager unitOfWork) :
+internal class CreateTagHandler(IRepositoryManager repository) :
     IRequestHandler<CreateTagCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(CreateTagCommand request, CancellationToken cancel)
@@ -24,7 +24,7 @@ internal class CreateTagHandler(IRepositoryManager unitOfWork) :
             SlugHelper.GenerateSlug(request.Name) : request.Slug;
 
         // Check duplicate
-        var existingSlug = await unitOfWork.Tags.GetTagBySlugAsync(slug);
+        var existingSlug = await repository.Tags.GetBySlugAsync(slug);
         if (existingSlug is not null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateTag);
 
@@ -37,7 +37,7 @@ internal class CreateTagHandler(IRepositoryManager unitOfWork) :
             UpdatedAt = DateTime.UtcNow
         };
 
-        await unitOfWork.Tags.InsertAsync(entity);
+        await repository.Tags.InsertAsync(entity);
 
         return OperationResult.Success(entity);
     }

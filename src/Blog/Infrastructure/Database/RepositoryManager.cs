@@ -13,6 +13,9 @@ public class RepositoryManager(IMongoDatabase mongoDatabase) : IRepositoryManage
     public ITagRepository Tags { get; } =
         new TagRepository(mongoDatabase, "blog.tags");
 
+    public ISubscriberRepository Subscribers { get; } =
+        new SubscriberRepository(mongoDatabase, "blog.subscribers");
+
     public ISettingRepository Settings { get; } =
         new SettingRepository(mongoDatabase, "blog.settings");
 

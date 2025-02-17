@@ -11,20 +11,20 @@ namespace Blog.Infrastructure.Database.Repositories;
 public class ArticleRepository(IMongoDatabase database, string collectionName) :
     MongoDbRepositoryBase<ArticleEntity>(database, collectionName), IArticleRepository
 {
-    public async Task<ArticleEntity> GetArticleByIdAsync(string id)
+    public async Task<ArticleEntity> GetByIdAsync(string id)
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
-    public async Task<ArticleEntity> GetArticleBySlugAsync(string slug)
+    public async Task<ArticleEntity> GetBySlugAsync(string slug)
     {
         return await _collection.Find(x => x.Slug == slug).SingleOrDefaultAsync();
     }
-    public async Task<List<ArticleEntity>> GetArticlesByIdsAsync(IEnumerable<string> ids)
+    public async Task<List<ArticleEntity>> GetByIdsAsync(IEnumerable<string> ids)
     {
         return await _collection.Find(x => ids.Contains(x.Id)).ToListAsync();
     }
 
-    public async Task<List<ArticleEntity>> GetArticlesByFilterAsync(ArticleFilter filter)
+    public async Task<List<ArticleEntity>> GetByFilterAsync(ArticleFilter filter)
     {
         var query = _collection.AsQueryable()
             .Where(x => !x.IsDeleted);
@@ -37,7 +37,7 @@ public class ArticleRepository(IMongoDatabase database, string collectionName) :
         return await query.ToListAsync();
     }
 
-    public async Task<int> CountArticlesByFilterAsync(ArticleFilter filter)
+    public async Task<int> CountByFilterAsync(ArticleFilter filter)
     {
         var query = _collection.AsQueryable()
             .Where(x => !x.IsDeleted);

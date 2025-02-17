@@ -5,6 +5,6 @@ namespace Blog.Application.Interfaces.Repositories;
 
 public interface ITagRepository : IRepository<TagEntity>
 {
-    Task<TagEntity> GetTagByIdAsync(string id);
-    Task<TagEntity> GetTagBySlugAsync(string slug);
+    Task<TagEntity> GetByIdAsync(string id);
+    Task<TagEntity> GetBySlugAsync(string slug);
 }

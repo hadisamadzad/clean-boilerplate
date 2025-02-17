@@ -1,4 +1,4 @@
-﻿using Blog.Application.Constants.Errors;
+﻿using Blog.Application.Constants;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Entities;
 using Blog.Application.Types.Models.Articles;
@@ -8,12 +8,12 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class UpdateArticleStatusHandler(IRepositoryManager repositoryManager) :
+internal class UpdateArticleStatusHandler(IRepositoryManager repository) :
     IRequestHandler<UpdateArticleStatusCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateArticleStatusCommand request, CancellationToken cancel)
     {
-        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
+        var entity = await repository.Articles.GetByIdAsync(request.ArticleId);
         if (entity is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.ArticleNotFound);
 
@@ -27,7 +27,7 @@ internal class UpdateArticleStatusHandler(IRepositoryManager repositoryManager) 
         entity.Status = request.Status;
         entity.UpdatedAt = DateTime.UtcNow;
 
-        _ = await repositoryManager.Articles.UpdateAsync(entity);
+        _ = await repository.Articles.UpdateAsync(entity);
 
         return OperationResult.Success(entity.MapToModel());
     }

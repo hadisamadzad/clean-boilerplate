@@ -1,4 +1,4 @@
-﻿using Blog.Application.Constants.Errors;
+﻿using Blog.Application.Constants;
 using Blog.Application.Helpers;
 using Blog.Application.Interfaces;
 using Blog.Application.Types.Models.Articles;
@@ -10,7 +10,7 @@ using MediatR;
 namespace Blog.Application.UseCases.Articles;
 
 // Handler
-internal class UpdateArticleHandler(IRepositoryManager repositoryManager) :
+internal class UpdateArticleHandler(IRepositoryManager repository) :
     IRequestHandler<UpdateArticleCommand, OperationResult>
 {
     public async Task<OperationResult> Handle(UpdateArticleCommand request, CancellationToken cancel)
@@ -21,11 +21,11 @@ internal class UpdateArticleHandler(IRepositoryManager repositoryManager) :
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check duplicate
-        var existingSlug = await repositoryManager.Articles.GetArticleBySlugAsync(request.Slug);
+        var existingSlug = await repository.Articles.GetBySlugAsync(request.Slug);
         if (existingSlug is not null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateArticle);
 
-        var entity = await repositoryManager.Articles.GetArticleByIdAsync(request.ArticleId);
+        var entity = await repository.Articles.GetByIdAsync(request.ArticleId);
 
         entity.Title = request.Title;
         entity.Subtitle = request.Subtitle;
@@ -39,7 +39,7 @@ internal class UpdateArticleHandler(IRepositoryManager repositoryManager) :
         entity.TagIds = [.. request.TagIds];
         entity.UpdatedAt = DateTime.UtcNow;
 
-        _ = await repositoryManager.Articles.UpdateAsync(entity);
+        _ = await repository.Articles.UpdateAsync(entity);
 
         return OperationResult.Success(entity.MapToModel());
     }

@@ -1,18 +1,21 @@
 using Common.Utilities;
 
-namespace Blog.Application.Constants.Errors;
+namespace Blog.Application.Constants;
 
 public static class Errors
 {
     // Common
     public static readonly ErrorModel InvalidId =
-        new("BLCO-100", "Error", "Invalid ID.");
+        new("BLCO-100", "Blog Error", "Invalid ID.");
 
     public static readonly ErrorModel InvalidSlug =
-        new("BLCO-101", "Error", "Invalid slug.");
+        new("BLCO-101", "Blog Error", "Invalid slug.");
 
     public static readonly ErrorModel SettingsNotFound =
-        new("BLCO-102", "Error", "Settings not found.");
+        new("BLCO-102", "Blog Error", "Settings not found.");
+
+    public static readonly ErrorModel InvalidEmail =
+        new("BLCO-103", "Blog Error", "Invalid email address.");
 
     // Article
     public static readonly ErrorModel InvalidArticleTitle =
