@@ -5,12 +5,12 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class GetOwnershipStatusHandler(IRepositoryManager unitOfWork)
+internal class GetOwnershipStatusHandler(IRepositoryManager repository)
     : IRequestHandler<GetOwnershipStatusQuery, OperationResult>
 {
-    public async Task<OperationResult> Handle(GetOwnershipStatusQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(GetOwnershipStatusQuery request, CancellationToken cancel)
     {
-        var isAlreadyOwned = await unitOfWork.Users.AnyUsersAsync();
+        var isAlreadyOwned = await repository.Users.AnyAsync();
 
         return OperationResult.Success(isAlreadyOwned);
     }

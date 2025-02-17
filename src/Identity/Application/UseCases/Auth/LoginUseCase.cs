@@ -1,7 +1,7 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Auth;
@@ -10,9 +10,10 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<LoginCommand, OperationResult>
+internal class LoginHandler(IRepositoryManager repository) :
+    IRequestHandler<LoginCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(LoginCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new LoginValidator().Validate(request);
@@ -20,7 +21,7 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
+        var user = await repository.Users.GetByEmailAsync(request.Email);
         if (user is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
@@ -35,15 +36,15 @@ internal class LoginHandler(IRepositoryManager unitOfWork) : IRequestHandler<Log
         if (!loggedIn)
         {
             user.TryToLockout();
-            _ = await unitOfWork.Users.UpdateAsync(user);
-            await unitOfWork.CommitAsync();
+            _ = await repository.Users.UpdateAsync(user);
+            await repository.CommitAsync();
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidCredentials);
         }
 
         /* Here user is authenticated */
         user.LastLoginDate = DateTime.UtcNow;
         user.ResetLockoutHistory();
-        _ = await unitOfWork.Users.UpdateAsync(user);
+        _ = await repository.Users.UpdateAsync(user);
 
         var result = new LoginResult
         {

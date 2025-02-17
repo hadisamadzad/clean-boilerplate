@@ -8,17 +8,17 @@ namespace Identity.Infrastructure.Database.Repositories;
 public class UserRepository(IMongoDatabase database, string collectionName) :
     MongoDbRepositoryBase<UserEntity>(database, collectionName), IUserRepository
 {
-    public async Task<bool> AnyUsersAsync()
+    public async Task<bool> AnyAsync()
     {
         return await _collection.Find(x => true).AnyAsync();
     }
 
-    public async Task<UserEntity> GetUserByIdAsync(string id)
+    public async Task<UserEntity> GetByIdAsync(string id)
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
 
-    public async Task<UserEntity> GetUserByEmailAsync(string email)
+    public async Task<UserEntity> GetByEmailAsync(string email)
     {
         email = email.ToLower();
         return await _collection.Find(x => x.Email.ToLower() == email).SingleOrDefaultAsync();

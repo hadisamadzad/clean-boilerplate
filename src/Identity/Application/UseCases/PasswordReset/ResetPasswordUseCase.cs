@@ -1,7 +1,7 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Specifications.Auth;
@@ -12,14 +12,14 @@ using Microsoft.Extensions.Options;
 namespace Identity.Application.UseCases.PasswordReset;
 
 // Handler
-internal class ResetPasswordHandler(IRepositoryManager unitOfWork,
+internal class ResetPasswordHandler(IRepositoryManager repository,
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<ResetPasswordCommand, OperationResult>
 {
-    private readonly IRepositoryManager _unitOfWork = unitOfWork;
+    private readonly IRepositoryManager _unitOfWork = repository;
     private readonly PasswordResetConfig _passwordResetConfig = passwordResetConfig.Value;
 
-    public async Task<OperationResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(ResetPasswordCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new ResetPasswordValidator().Validate(request);
@@ -31,7 +31,7 @@ internal class ResetPasswordHandler(IRepositoryManager unitOfWork,
         if (!succeeded)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidToken);
 
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
+        var user = await _unitOfWork.Users.GetByEmailAsync(email);
         if (user is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 

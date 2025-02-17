@@ -1,16 +1,17 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Interfaces;
 using MediatR;
 
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class CheckUsernameHandler(IRepositoryManager unitOfWork) : IRequestHandler<CheckUsernameQuery, OperationResult>
+internal class CheckUsernameHandler(IRepositoryManager repository) :
+    IRequestHandler<CheckUsernameQuery, OperationResult>
 {
-    public async Task<OperationResult> Handle(CheckUsernameQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CheckUsernameQuery request, CancellationToken cancel)
     {
         // Validation
         var validation = new CheckUsernameValidator().Validate(request);
@@ -18,7 +19,7 @@ internal class CheckUsernameHandler(IRepositoryManager unitOfWork) : IRequestHan
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
+        var user = await repository.Users.GetByEmailAsync(request.Email);
 
         var isAvailable = user is null;
 

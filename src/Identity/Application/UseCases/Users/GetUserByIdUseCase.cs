@@ -1,5 +1,5 @@
 ﻿using Common.Utilities.OperationResult;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Users;
 using MediatR;
@@ -7,12 +7,13 @@ using MediatR;
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-public class GetUserByIdHandler(IRepositoryManager unitOfWork) : IRequestHandler<GetUserByIdQuery, OperationResult>
+public class GetUserByIdHandler(IRepositoryManager repository) :
+    IRequestHandler<GetUserByIdQuery, OperationResult>
 {
-    public async Task<OperationResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(GetUserByIdQuery request, CancellationToken cancel)
     {
         // Get
-        var entity = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
+        var entity = await repository.Users.GetByIdAsync(request.UserId);
         if (entity is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 

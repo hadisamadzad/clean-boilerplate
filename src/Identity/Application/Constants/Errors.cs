@@ -1,6 +1,6 @@
 using Common.Utilities;
 
-namespace Identity.Application.Constants.Errors;
+namespace Identity.Application.Constants;
 
 public static class Errors
 {

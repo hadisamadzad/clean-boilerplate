@@ -1,7 +1,7 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Specifications.Auth;
@@ -12,10 +12,10 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class RegisterHandler(IRepositoryManager unitOfWork)
+internal class RegisterHandler(IRepositoryManager repository)
     : IRequestHandler<RegisterCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(RegisterCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new RegisterValidator().Validate(request);
@@ -25,7 +25,7 @@ internal class RegisterHandler(IRepositoryManager unitOfWork)
         // Check initial ownership
         // NOTE Registration is supposed to be done only once and for the first user. So if
         // there is any existing user, it means there is nothing to do with registration.
-        var isAlreadyOwned = await unitOfWork.Users.AnyUsersAsync();
+        var isAlreadyOwned = await repository.Users.AnyAsync();
         if (isAlreadyOwned)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.OwnershipAlreadyDone);
 
@@ -42,7 +42,7 @@ internal class RegisterHandler(IRepositoryManager unitOfWork)
             UpdatedAt = DateTime.UtcNow
         };
 
-        await unitOfWork.Users.InsertAsync(user);
+        await repository.Users.InsertAsync(user);
 
         var result = new RegisterResult
         {

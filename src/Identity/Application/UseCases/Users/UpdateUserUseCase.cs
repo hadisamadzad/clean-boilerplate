@@ -1,16 +1,17 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Interfaces;
 using MediatR;
 
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandler<UpdateUserCommand, OperationResult>
+internal class UpdateUserHandler(IRepositoryManager repository) :
+    IRequestHandler<UpdateUserCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(UpdateUserCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new UpdateUserValidator().Validate(request);
@@ -18,12 +19,12 @@ internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check if user is admin
-        var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
+        var requesterUser = await repository.Users.GetByIdAsync(request.AdminUserId);
         if (requesterUser is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
         // Get
-        var user = await unitOfWork.Users.GetUserByIdAsync(request.UserId);
+        var user = await repository.Users.GetByIdAsync(request.UserId);
         if (user is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
@@ -32,7 +33,7 @@ internal class UpdateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
         user.LastName = request.LastName;
 
         user.UpdatedAt = DateTime.UtcNow;
-        _ = await unitOfWork.Users.UpdateAsync(user);
+        _ = await repository.Users.UpdateAsync(user);
 
         return OperationResult.Success(user.Id);
     }

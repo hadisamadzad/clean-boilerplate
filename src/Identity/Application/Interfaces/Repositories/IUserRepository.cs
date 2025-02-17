@@ -5,7 +5,7 @@ namespace Identity.Application.Interfaces.Repositories;
 
 public interface IUserRepository : IRepository<UserEntity>
 {
-    Task<bool> AnyUsersAsync();
-    Task<UserEntity> GetUserByIdAsync(string id);
-    Task<UserEntity> GetUserByEmailAsync(string email);
+    Task<bool> AnyAsync();
+    Task<UserEntity> GetByIdAsync(string id);
+    Task<UserEntity> GetByEmailAsync(string email);
 }

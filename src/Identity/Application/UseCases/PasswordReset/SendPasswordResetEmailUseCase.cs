@@ -1,7 +1,7 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Configs;
@@ -12,14 +12,14 @@ namespace Identity.Application.UseCases.PasswordReset;
 
 // Handler
 internal class SendPasswordResetEmailHandler(
-    IRepositoryManager unitOfWork,
+    IRepositoryManager repository,
     IEmailService transactionalEmailService,
     IOptions<PasswordResetConfig> passwordResetConfig)
     : IRequestHandler<SendPasswordResetEmailCommand, OperationResult>
 {
     private readonly PasswordResetConfig _passwordResetConfig = passwordResetConfig.Value;
 
-    public async Task<OperationResult> Handle(SendPasswordResetEmailCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(SendPasswordResetEmailCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new SendPasswordResetEmailValidator().Validate(request);
@@ -27,7 +27,7 @@ internal class SendPasswordResetEmailHandler(
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Get
-        var user = await unitOfWork.Users.GetUserByEmailAsync(request.Email);
+        var user = await repository.Users.GetByEmailAsync(request.Email);
         if (user is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 

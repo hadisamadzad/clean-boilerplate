@@ -1,7 +1,7 @@
 ﻿using Common.Helpers;
 using Common.Utilities.OperationResult;
 using FluentValidation;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Entities;
@@ -10,9 +10,10 @@ using MediatR;
 namespace Identity.Application.UseCases.Users;
 
 // Handler
-internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandler<CreateUserCommand, OperationResult>
+internal class CreateUserHandler(IRepositoryManager repository) :
+    IRequestHandler<CreateUserCommand, OperationResult>
 {
-    public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancel)
     {
         // Validation
         var validation = new CreateUserValidator().Validate(request);
@@ -20,7 +21,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
             return OperationResult.Failure(OperationStatus.Invalid, validation.GetFirstError());
 
         // Check if user is admin
-        var requesterUser = await unitOfWork.Users.GetUserByIdAsync(request.AdminUserId);
+        var requesterUser = await repository.Users.GetByIdAsync(request.AdminUserId);
         if (requesterUser is null)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.InvalidId);
 
@@ -29,7 +30,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
             return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InsufficientAccessLevel);
 
         // Checking duplicate email
-        var isDuplicate = await unitOfWork.Users
+        var isDuplicate = await repository.Users
             .ExistsAsync(x => x.Email.ToLower() == request.Email.ToLower());
         if (isDuplicate)
             return OperationResult.Failure(OperationStatus.Unprocessable, Errors.DuplicateUsername);
@@ -51,7 +52,7 @@ internal class CreateUserHandler(IRepositoryManager unitOfWork) : IRequestHandle
             UpdatedAt = DateTime.UtcNow
         };
 
-        await unitOfWork.Users.InsertAsync(entity);
+        await repository.Users.InsertAsync(entity);
 
         return OperationResult.Success(entity);
     }

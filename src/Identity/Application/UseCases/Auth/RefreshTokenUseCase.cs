@@ -1,5 +1,5 @@
 ﻿using Common.Utilities.OperationResult;
-using Identity.Application.Constants.Errors;
+using Identity.Application.Constants;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Application.Types.Models.Auth;
@@ -8,16 +8,16 @@ using MediatR;
 namespace Identity.Application.UseCases.Auth;
 
 // Handler
-internal class RefreshTokenHandler(IRepositoryManager unitOfWork) : IRequestHandler<RefreshTokenQuery, OperationResult>
+internal class RefreshTokenHandler(IRepositoryManager repository) : IRequestHandler<RefreshTokenQuery, OperationResult>
 {
-    public async Task<OperationResult> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(RefreshTokenQuery request, CancellationToken cancel)
     {
         if (!JwtHelper.IsValidJwtRefreshToken(request.RefreshToken))
             return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InvalidCredentials);
 
         var email = JwtHelper.GetEmail(request.RefreshToken);
 
-        var user = await unitOfWork.Users.GetUserByEmailAsync(email);
+        var user = await repository.Users.GetByEmailAsync(email);
         if (user is null)
             return OperationResult.Failure(OperationStatus.Unauthorized, Errors.InvalidId);
 
