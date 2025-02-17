@@ -1,3 +1,4 @@
+using Common.Interfaces;
 using Common.Utilities.OperationResult;
 using Identity.Application.Types.Models.Auth;
 using Identity.Application.Types.Models.Users;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api;
 
-public static class AuthEndpoints
+public class AuthEndpoints : IEndpoint
 {
     const string Route = "api/auth/";
     const string Tag = "Auth";
@@ -18,7 +19,7 @@ public static class AuthEndpoints
     public record CheckRegistrationRequest();
 
     // Endpoints
-    public static void MapAuthEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

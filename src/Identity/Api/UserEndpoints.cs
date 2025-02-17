@@ -1,3 +1,4 @@
+using Common.Interfaces;
 using Common.Utilities.OperationResult;
 using Identity.Application.Types.Entities;
 using Identity.Application.Types.Models.Users;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api;
 
-public static class UserEndpoints
+public class UserEndpoints : IEndpoint
 {
     const string Route = "api/users/";
     const string Tag = "Users";
@@ -23,7 +24,7 @@ public static class UserEndpoints
     public record UpdateUserPasswordRequest(string CurrentPassword, string NewPassword);
 
     // Endpoints
-    public static void MapUserEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

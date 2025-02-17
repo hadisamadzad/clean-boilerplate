@@ -1,3 +1,4 @@
+using Common.Interfaces;
 using Common.Utilities.OperationResult;
 using Identity.Application.UseCases.PasswordReset;
 using MediatR;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api;
 
-public static class PasswordResetApi
+public class PasswordResetApi : IEndpoint
 {
     const string Route = "api/auth/";
     const string Tag = "PasswordReset";
@@ -15,7 +16,7 @@ public static class PasswordResetApi
     public record ResetPasswordRequest(string Token, string NewPassword);
 
     // Endpoints
-    public static void MapPasswordResetEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

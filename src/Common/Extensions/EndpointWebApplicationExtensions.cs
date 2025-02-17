@@ -1,4 +1,3 @@
-using System.Reflection;
 using Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 
@@ -9,16 +8,18 @@ public static class EndpointWebApplicationExtensions
     public static void MapEndpoints(this WebApplication app)
     {
         var interfaceType = typeof(IEndpoint);
-        var method = interfaceType.GetMethods().Single();
+        var endpointTypes = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(x => x.GetTypes())
+            .Where(x => x.IsClass && !x.IsInterface && !x.IsAbstract &&
+                interfaceType.IsAssignableFrom(x))
+            .ToList();
 
-        var endpointClasses = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(x => interfaceType.IsAssignableFrom(x) &&
-                x.IsClass && !x.IsAbstract);
-
-        foreach (var endpointClass in endpointClasses)
+        foreach (var endpointType in endpointTypes)
         {
-            var instance = Activator.CreateInstance(endpointClass);
-            method.Invoke(instance, [app]);
+            var instance = Activator.CreateInstance(endpointType);
+            interfaceType.GetMethods().Single()
+                .Invoke(instance, [app]);
         }
     }
 }

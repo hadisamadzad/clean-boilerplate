@@ -1,15 +1,16 @@
+using Common.Interfaces;
 using Identity.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api;
 
-public static class DevEndpoints
+public class DevEndpoints : IEndpoint
 {
     const string Route = "api/dev/";
     const string Tag = "Dev";
 
     // Endpoints
-    public static void MapDevEndpoints(this WebApplication app)
+    public void MapEndpoints(WebApplication app)
     {
         var group = app.MapGroup(Route).WithTags(Tag);
 

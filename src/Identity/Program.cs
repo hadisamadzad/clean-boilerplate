@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
+using Common.Extensions;
 using Common.Helpers;
-using Identity.Api;
 using Identity.Application.Interfaces;
 using Identity.Core.Bootstrap;
 using Identity.Infrastructure.Database;
@@ -72,10 +72,7 @@ app.UseCors("general");
 app.MapHealthChecks("/health");
 
 // Add endpoints
-app.MapDevEndpoints();
-app.MapAuthEndpoints();
-app.MapPasswordResetEndpoints();
-app.MapUserEndpoints();
+app.MapEndpoints();
 
 if (!app.Environment.IsProduction())
     app.UseConfiguredSwagger();
