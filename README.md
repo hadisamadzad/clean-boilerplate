@@ -67,11 +67,6 @@ This project follows the Clean Architecture pattern and the application is divid
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
-- .NET 8.0+
-- MongoDB installed or a cloud database
-
 ### Installation
 
 1. Clone the repository
