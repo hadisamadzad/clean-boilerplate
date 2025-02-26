@@ -4,7 +4,7 @@ docker images -f dangling=true -q
 # Build docker image from dockerfile
 
 # Build docker image using docker-compose
-sudo docker-compose build
+sudo ENV="Development" docker-compose build
 
 # Up docker image using docker-compose
 sudo ENV="Development" docker-compose -f docker-compose.yml up -d

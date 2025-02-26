@@ -11,5 +11,6 @@ public sealed class BootstrapHelper
         new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
             .AddJsonFile($"appsettings.{env}.json", optional: false)
+            .AddEnvironmentVariables()
             .Build();
 }

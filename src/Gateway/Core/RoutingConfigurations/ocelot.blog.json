@@ -1,0 +1,27 @@
+{
+  "GlobalConfiguration": {},
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/blog/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44002 }]
+    },
+    {
+      "UpstreamPathTemplate": "/blog/{all}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/api/{all}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44002 }]
+    },
+    {
+      "UpstreamPathTemplate": "/blog/{all}",
+      "UpstreamHttpMethod": [ "Post", "Put", "Patch", "Delete" ],
+      "DownstreamPathTemplate": "/api/{all}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44002 }],
+      "AuthenticationOptions": { "AuthenticationProviderKey": "general-auth-key" }
+    }
+  ]
+}

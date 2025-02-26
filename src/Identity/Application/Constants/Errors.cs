@@ -29,7 +29,7 @@ public static class Errors
 
     // Auth
     public static readonly ErrorModel InvalidCredentials =
-        new("IDAU-101", "Identity Error", "Provided username or password.");
+        new("IDAU-101", "Identity Error", "Invalid credentials.");
 
     public static readonly ErrorModel LockedUser =
         new("IDAU-102", "Identity Error", "User is locked out due to multiple failed logins.");

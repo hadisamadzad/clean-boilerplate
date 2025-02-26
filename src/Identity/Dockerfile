@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /app
 COPY . .
 RUN rm -rf ./src
-COPY src/Identity src/Identity
-RUN dotnet publish src/Identity -c release -o out
+COPY Identity Identity
+RUN dotnet publish Identity -c release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app

@@ -1,18 +1,13 @@
 using System.Text.Json.Serialization;
-using Gateway;
+using Common.Helpers;
+using Gateway.Core;
 using Gateway.Core.DependencyInjection;
 using Gateway.Core.Middleware;
 using Ocelot.DependencyInjection;
 using Serilog;
 
-var env = Environment
-    .GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-
-var configs = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false)
-    .AddJsonFile($"appsettings.{env}.json", optional: false)
-    .AddEnvironmentVariables()
-    .Build();
+var env = BootstrapHelper.GetEnvironmentName("Local");
+var configs = BootstrapHelper.GetConfigFromAppsettingsJson(env);
 
 // Logger
 Log.Logger = new LoggerConfiguration()
@@ -28,7 +23,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 builder.Configuration.AddConfiguration(configs);
 builder.Logging.ClearProviders();
-builder.Host.UseSerilog();
+builder.Host.UseSerilog(Log.Logger);
 builder.Configuration.AddOcelot(Constants.RouteConfigPath, builder.Environment);
 
 // Add services to the container

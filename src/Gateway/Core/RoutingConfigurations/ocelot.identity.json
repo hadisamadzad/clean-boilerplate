@@ -6,19 +6,19 @@
       "UpstreamHttpMethod": [ "Get", "Post", "Patch" ],
       "DownstreamPathTemplate": "/api/auth/{all}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 49001 }]
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44001 }]
     },{
       "UpstreamPathTemplate": "/identity/health",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamPathTemplate": "/health",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 49001 }]
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44001 }]
     },{
       "UpstreamPathTemplate": "/identity/{all}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Patch", "Delete" ],
       "DownstreamPathTemplate": "/api/{all}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 49001 }],
+      "DownstreamHostAndPorts": [{ "Host": "172.90.0.1", "Port": 44001 }],
       "AuthenticationOptions": { "AuthenticationProviderKey": "general-auth-key" }
     }
   ]

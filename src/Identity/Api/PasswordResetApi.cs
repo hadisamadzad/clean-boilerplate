@@ -21,7 +21,7 @@ public class PasswordResetApi : IEndpoint
         var group = app.MapGroup(Route).WithTags(Tag);
 
         // Endpoint for sending password reset email
-        group.MapPost(Route + "password-reset", async (
+        group.MapPost("password-reset", async (
             IMediator mediator,
             [FromBody] SendPasswordResetEmailRequest request) =>
             {
@@ -41,7 +41,7 @@ public class PasswordResetApi : IEndpoint
             });
 
         // Endpoint for getting password reset info
-        group.MapGet(Route + "password-reset", async (
+        group.MapGet("password-reset", async (
             IMediator mediator,
             [FromQuery] string token) =>
             {
@@ -61,7 +61,7 @@ public class PasswordResetApi : IEndpoint
             });
 
         // Endpoint for resetting user password
-        group.MapPatch(Route + "password-reset", async (
+        group.MapPatch("password-reset", async (
             IMediator mediator,
             [FromBody] ResetPasswordRequest request) =>
             {

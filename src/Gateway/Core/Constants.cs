@@ -1,4 +1,4 @@
-namespace Gateway;
+namespace Gateway.Core;
 
 public static class Constants
 {

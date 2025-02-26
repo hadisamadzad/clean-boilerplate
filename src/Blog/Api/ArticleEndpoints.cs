@@ -171,11 +171,11 @@ public class ArticleEndpoints : IEndpoint
                 };
             });
 
-        // Endpoint for archiving an article
-        group.MapPatch("{articleId}/archive/", async (
+        // Endpoint for updating status of an article
+        group.MapPatch("{articleId}/status/", async (
             IMediator mediator,
             [FromRoute] string articleId,
-            [FromBody] ArchiveArticleRequest request) =>
+            [FromBody] UpdateArticleStatusRequest request) =>
             {
                 return await mediator.Send(new UpdateArticleStatusCommand
                 (
@@ -252,4 +252,4 @@ public class GetArticlesByFilterRequest
     public int PageSize { get; set; }
 }
 
-public record ArchiveArticleRequest(ArticleStatus Status);
+public record UpdateArticleStatusRequest(ArticleStatus Status);
